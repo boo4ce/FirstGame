@@ -115,6 +115,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return false;
     }
 
+    public Bitmap[] subArray(Bitmap[] arr, int start_index, int end_index) {
+        if(start_index > end_index) return null;
+
+        Bitmap[] subArr = new Bitmap[end_index - start_index + 1];
+        for(int i = start_index; i <= end_index; i++) {
+            subArr[i-start_index] = arr[i];
+        }
+        return subArr;
+    }
+
     @SuppressLint("ResourceType")
     private void createObject() {
         new Thread(new Runnable() {
@@ -138,7 +148,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
                     basicThreat = new Threat(GameView.this, bitmaps[13], ObjectSize.ROAD_WIDTH,
                             ObjectSize.HOLD_HEIGHT, 300, 80);
-                    score = new Score(GameView.this, bitmaps, 250, 300);
+                    score = new Score(GameView.this, bitmaps[10],
+                            subArray(bitmaps, 0, 9), 250, 300);
                 }
             }
         }).start();

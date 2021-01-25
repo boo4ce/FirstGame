@@ -26,11 +26,12 @@ public class MainThread extends Thread {
                     canvas = this.surfaceHolder.lockCanvas();
                     synchronized (canvas) {
                         gameView.update();
-                        gameView.draw(canvas);
 
                         if(gameView.checkCollision()) {
                             gameView.running = false;
                         }
+
+                        gameView.draw(canvas);
 
                         this.count_frm.increase();
                     }
