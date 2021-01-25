@@ -37,6 +37,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Threat basicThreat;
 
     public boolean running;
+    Bitmap[] bitmaps = new Bitmap[20];
 
     public GameView(Context context) {
         super(context);
@@ -87,7 +88,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return false;
     }
 
-    public Bitmap[] subArray(Bitmap[] arr, int start_index, int end_index) {
+    private Bitmap[] subArray(Bitmap[] arr, int start_index, int end_index) {
         if(start_index > end_index) return null;
 
         Bitmap[] subArr = new Bitmap[end_index - start_index + 1];
@@ -102,12 +103,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                Bitmap[] bitmaps = new Bitmap[20];
                 int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
                         R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
                         R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.vn_ball, //8, 9, 10, 11
-                        R.drawable.setting_icon, R.drawable.threat}; //12, 13
+                        R.drawable.setting_icon, R.drawable.threat, R.drawable.setting_icon}; //12, 13, 14
                 InputStream inputStream;
 
                 for(int i = 0; i < list.length; i++) {

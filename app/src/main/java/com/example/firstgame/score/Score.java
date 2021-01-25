@@ -15,7 +15,7 @@ public class Score {
     private int key_point;
     private int last_posi;
 
-    private final int score_x, score_y, score_y2;
+    private final int score_x, score_y;
     private GameView gameView;
     private final Bitmap[] digits;
     private final Bitmap scoreB;
@@ -33,7 +33,7 @@ public class Score {
 
         score_x = (gameView.getWidth() - scoreB.getWidth())/2;
         score_y = gameView.getHeight()/2 - height;
-        score_y2 = score_y + scoreB.getHeight()*2;
+
         // 1080 - (1080 - num_digits*width)/2 - 250
         this.last_posi = gameView.getWidth()/2 - width + num_digits*width/2;
 
@@ -54,7 +54,7 @@ public class Score {
             needed_digit = cur_score%10;
             cur_score/=10;
 
-            canvas.drawBitmap(digits[needed_digit], last_posi1, this.score_y2, null);
+            canvas.drawBitmap(digits[needed_digit], last_posi1, this.score_y, null);
 
             last_posi1 -= width;
         }
@@ -63,7 +63,7 @@ public class Score {
 
     public void draw(Canvas canvas) {
         this.displayScore(canvas);
-        canvas.drawBitmap(scoreB, score_x, score_y, null);
+        canvas.drawBitmap(scoreB, score_x, 30, null);
     }
 
     synchronized public void gainScore() {
