@@ -2,6 +2,7 @@ package com.example.firstgame.score;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 
 import com.example.firstgame.main.GameView;
 
@@ -11,14 +12,16 @@ public class Score {
 
     private final int width, height;
     private int num_digits = 1;
-    private int key_point = 10;
+    private int key_point = 1000;
     private int last_posi;
     private final int const_posi;
 
+    private final int score_x;
     private GameView gameView;
-    Bitmap[] digits;
+    private final Bitmap[] digits;
+    private final Bitmap scoreB;
 
-    public Score(GameView gameView, Bitmap[] digits, int width, int height) {
+    public Score(GameView gameView,Bitmap scoreB, Bitmap[] digits, int width, int height) {
         this.width = width;
         this.height = height;
         this.lock = true;
@@ -26,17 +29,19 @@ public class Score {
         this.gameView = gameView;
         this.const_posi = gameView.getWidth()/2 - width;
 
+        score_x = gameView.getWidth()/2;
         // 1080 - (1080 - num_digits*width)/2 - 250
         this.last_posi = const_posi + num_digits*width/2;
 
         this.digits = digits;
+        this.scoreB = scoreB;
     }
 
     public int getScore() {
         return score;
     }
 
-    public void displayScore(Canvas canvas) {
+    private void displayScore(Canvas canvas) {
         int cur_score = new Integer(score);
         int needed_digit = 0;
         int last_posi1 = new Integer(last_posi);
@@ -52,9 +57,14 @@ public class Score {
         while(cur_score != 0);
     }
 
+    public void draw(Canvas canvas) {
+        this.displayScore(canvas);
+        canvas.drawBitmap(scoreB, score_x, 30, null);
+    }
+
     synchronized public void gainScore() {
         if(!lock) {
-            this.score++;
+            this.score+=1000;
             lock = true;
             if(this.score == key_point) {
                 if(key_point == 10000) {

@@ -1,19 +1,18 @@
 package com.example.firstgame.object;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
+
+import com.example.firstgame.main.GameView;
 
 import java.util.Random;
 
 public class Threat extends GameObject {
-    private Background background;
+    private GameView gameView;
 
     private int x_hold; // coordinate in bitmap
     private final int x_max;
+    private final int speedUp_line_y;
 
     private boolean direct, running, effected;
 
@@ -21,18 +20,19 @@ public class Threat extends GameObject {
 
     private final int move = 10;
 
-    public Threat(Background background, Bitmap image, int width, int height,
+    public Threat(GameView gameView, Bitmap image, int width, int height,
                   int hold_width, int hold_height) {
         super(image, width, height);
 
-        this.background = background;
-        this.x = background.getX();
-        this.y = background.getY() - height;
+        this.gameView = gameView;
+        this.x = 0;
+        this.y = -height;
         this.hold_width = hold_width;
         this.hold_height = hold_height;
 
-        // 1000 - 300 = 700 => 71
-        x_max = background.getWidth() - width;
+        this.speedUp_line_y = gameView.getHeight()*3/5;
+        // 1080 - 300 = 780
+        x_max = gameView.getWidth() - hold_width;
 
         int tmp = x_max/10 + 1;
         this.x_hold = Math.abs(new Random().nextInt() % tmp)*10;
@@ -49,7 +49,7 @@ public class Threat extends GameObject {
     }
 
     public void update() {
-        if(this.y < background.getSpeed_up_line_coor()) this.y += move;
+        if(this.y < speedUp_line_y) this.y += move;
         else this.y += move*2;
 
         if(!running) return;
@@ -69,7 +69,7 @@ public class Threat extends GameObject {
     }
 
     public boolean die() {
-        return this.y >= background.getHeight();
+        return this.y >= gameView.getHeight();
     }
 
     public boolean isEffected() {
@@ -98,7 +98,7 @@ public class Threat extends GameObject {
     }
 
     public Threat clone() {
-        return new Threat(this.background, this.image, this.width, this.height,
+        return new Threat(this.gameView, this.image, this.width, this.height,
                 this.hold_width, this.hold_height);
     }
 }
