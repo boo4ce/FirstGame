@@ -1,0 +1,38 @@
+    public boolean checkCollision() {
+        for(int i = 0; i < threats.size(); i++) {
+            Threat threat = threats.get(i);
+            if(threat.isEffected() || threat.getY() < ball.getY() - 80) continue;
+
+            Hold hold1 = threat.getHold();
+            if(hold1.getY() <= ball.getY() + 240) {
+                score.unlock();
+                double a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                        hold1.getCenter_x(), hold1.getCenter_y(),
+                        hold1.getX() + hold1.getWidth(), hold1.getY());
+                if(a < ball.getPerimeter()) return true;
+
+                a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                        hold1.getCenter_x(), hold1.getCenter_y(),
+                        hold1.getX(), hold1.getY());
+                if(a < ball.getPerimeter()) return true;
+
+                a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                        hold1.getCenter_x(), hold1.getCenter_y(),
+                        hold1.getX(), hold1.getY() + hold1.getHeight());
+                if(a < ball.getPerimeter()) return true;
+
+                a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                        hold1.getCenter_x(), hold1.getCenter_y(),
+                        hold1.getX() + hold1.getWidth(), hold1.getY() + hold1.getHeight());
+                if(a < ball.getPerimeter()) return true;
+
+                if(hold1.getX() > ball.getCenter_x() || hold1.getX() + 300 < ball.getCenter_x())
+                    return true;
+            }
+            else {
+                score.gainScore();
+                threat.set_Effected();
+            }
+        }
+        return false;
+    }

@@ -11,8 +11,8 @@ public class Score {
     private boolean lock;
 
     private int width, height;
-    private int num_digits = 1;
-    private int key_point = 10;
+    private int num_digits;
+    private int key_point;
     private int last_posi;
 
     private final int score_x, score_y, score_y2;
@@ -22,6 +22,8 @@ public class Score {
 
     public Score(GameView gameView, Bitmap scoreB, Bitmap[] digits, int width, int height) {
         this.score = 0;
+        this.num_digits = 1;
+        this.key_point = 10;
 
         this.width = width;
         this.height = height;

@@ -31,7 +31,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private SupportThread supportThread;
 
     private Ball ball;
-    private Background background;
     private Vector<Threat> threats;
     private Score score;
 
@@ -49,7 +48,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         this.ball.update();
-//        this.background.update();
         for(int i = 0; i < threats.size(); i++) {
             threats.get(i).update();
         }
@@ -58,7 +56,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-//        this.background.draw(canvas);
         score.draw(canvas);
         for(int i = 0; i < threats.size(); i++) {
             threats.get(i).draw(canvas);
@@ -77,39 +74,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public boolean checkCollision() {
+        int flag;
         for(int i = 0; i < threats.size(); i++) {
-            Threat threat = threats.get(i);
-            if(threat.isEffected() || threat.getY() < ball.getY() - 80) continue;
-
-            Hold hold1 = threat.getHold();
-            if(hold1.getY() <= ball.getY() + 240) {
-                score.unlock();
-                double a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
-                        hold1.getCenter_x(), hold1.getCenter_y(),
-                        hold1.getX() + hold1.getWidth(), hold1.getY());
-                if(a < ball.getPerimeter()) return true;
-
-                a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
-                        hold1.getCenter_x(), hold1.getCenter_y(),
-                        hold1.getX(), hold1.getY());
-                if(a < ball.getPerimeter()) return true;
-
-                a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
-                        hold1.getCenter_x(), hold1.getCenter_y(),
-                        hold1.getX(), hold1.getY() + hold1.getHeight());
-                if(a < ball.getPerimeter()) return true;
-
-                a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
-                        hold1.getCenter_x(), hold1.getCenter_y(),
-                        hold1.getX() + hold1.getWidth(), hold1.getY() + hold1.getHeight());
-                if(a < ball.getPerimeter()) return true;
-
-                if(hold1.getX() > ball.getCenter_x() || hold1.getX() + 300 < ball.getCenter_x())
-                    return true;
-            }
-            else {
-                score.gainScore();
-                threat.set_Effected();
+            flag = threats.get(i).checkCollision_and_getScore();
+            switch(flag) {
+                case Threat.COLLISION: return true;
+                case Threat.GET_SCORE: score.gainScore(); break;
+                case Threat.IN_HOLD: score.unlock(); break;
+                case Threat.NO_COLLISION:
             }
         }
         return false;
@@ -146,7 +118,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
                 if(true) {
                     ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
-                    basicThreat = new Threat(GameView.this, bitmaps[13], ObjectSize.ROAD_WIDTH,
+                    basicThreat = new Threat(GameView.this, ball, bitmaps[13], ObjectSize.ROAD_WIDTH,
                             ObjectSize.HOLD_HEIGHT, 300, 80);
                     score = new Score(GameView.this, bitmaps[10],
                             subArray(bitmaps, 0, 9), 250, 300);
@@ -171,7 +143,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         score.reset();
         threats.clear();
         ball.reset();
-        background.reset();
+        threats.clear();
 
         running = true;
     }

@@ -8,7 +8,13 @@ import com.example.firstgame.main.GameView;
 import java.util.Random;
 
 public class Threat extends GameObject {
+    public static final int COLLISION = 0;
+    public static final int GET_SCORE = 2;
+    public static final int NO_COLLISION = 1;
+    public static final int IN_HOLD = 3;
+
     private GameView gameView;
+    private Ball ball;
 
     private int x_hold; // coordinate in bitmap
     private final int x_max;
@@ -20,17 +26,19 @@ public class Threat extends GameObject {
 
     private final int move = 10;
 
-    public Threat(GameView gameView, Bitmap image, int width, int height,
+    public Threat(GameView gameView, Ball ball, Bitmap image, int width, int height,
                   int hold_width, int hold_height) {
         super(image, width, height);
 
         this.gameView = gameView;
+        this.ball = ball;
+
         this.x = 0;
         this.y = -height;
         this.hold_width = hold_width;
         this.hold_height = hold_height;
 
-        this.speedUp_line_y = gameView.getHeight()*3/5;
+        this.speedUp_line_y = ball.getY() - ball.getHeight()*3/2;
         // 1080 - 300 = 780
         x_max = gameView.getWidth() - hold_width;
 
@@ -98,7 +106,40 @@ public class Threat extends GameObject {
     }
 
     public Threat clone() {
-        return new Threat(this.gameView, this.image, this.width, this.height,
+        return new Threat(this.gameView, this.ball, this.image, this.width, this.height,
                 this.hold_width, this.hold_height);
+    }
+
+    public int checkCollision_and_getScore() {
+        if(this.isEffected() || this.getY() < ball.getY() - this.height) return Threat.NO_COLLISION;
+        int hold_center_x = x_hold + hold_width/2, hold_center_y = this.y + hold_height/2;
+
+        // 240 = this.height + ball.height
+        if(this.y <= ball.getY() + 240) {
+            double a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                    hold_center_x, hold_center_y, x_hold + hold_width, this.y);
+            if (a < ball.getPerimeter()) return Threat.COLLISION;
+
+            a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                    hold_center_x, hold_center_y, x_hold, this.y);
+            if (a < ball.getPerimeter()) return Threat.COLLISION;
+
+            a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                    hold_center_x, hold_center_y, x_hold, this.y + hold_height);
+            if (a < ball.getPerimeter()) return Threat.COLLISION;
+
+            a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                    hold_center_x, hold_center_y, x_hold + hold_width, this.y + hold_height);
+            if (a < ball.getPerimeter()) return Threat.COLLISION;
+
+            if (x_hold > ball.getCenter_x() || x_hold + 300 < ball.getCenter_x())
+                return Threat.COLLISION;
+
+            return Threat.IN_HOLD;
+        }
+
+        this.set_Effected();
+
+        return Threat.GET_SCORE;
     }
 }
