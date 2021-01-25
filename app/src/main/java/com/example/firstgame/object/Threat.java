@@ -11,27 +11,36 @@ import java.util.Random;
 
 public class Threat extends GameObject {
     private Background background;
+
     private int x_hold; // coordinate in bitmap
+    private final int x_max;
+
     private boolean direct, running, effected;
+
     private int hold_width, hold_height;
+
+    private final int move = 10;
 
     public Threat(Background background, Bitmap image, int width, int height,
                   int hold_width, int hold_height) {
         super(image, width, height);
 
         this.background = background;
-        this.x = ObjectSize.WALL_WIDTH;
-        this.y = -height;
+        this.x = background.getX();
+        this.y = background.getY() - height;
         this.hold_width = hold_width;
         this.hold_height = hold_height;
 
         // 1000 - 300 = 700 => 71
-        this.x_hold = Math.abs(new Random().nextInt() % 71)*10;
+        x_max = background.getWidth() - width;
+
+        int tmp = x_max/10 + 1;
+        this.x_hold = Math.abs(new Random().nextInt() % tmp)*10;
 
         this.direct = (new Random()).nextBoolean();
 
         if(this.x_hold == 0) direct = true;
-        else if(this.x_hold == 700) {
+        else if(this.x_hold == x_max) {
             direct = false;
         }
 
@@ -40,13 +49,13 @@ public class Threat extends GameObject {
     }
 
     public void update() {
-        if(this.y < 1200) this.y += background.getMove();
-        else this.y += background.getMove()*2;
+        if(this.y < background.getSpeed_up_line_coor()) this.y += move;
+        else this.y += move*2;
 
         if(!running) return;
         if(direct) this.x_hold += 10;
         else this.x_hold -= 10;
-        if(x_hold <= 0 || x_hold >= 700)
+        if(x_hold <= 0 || x_hold >= x_max)
             direct = !direct;
     }
 
@@ -54,8 +63,8 @@ public class Threat extends GameObject {
         if(x_hold > 0)
             canvas.drawBitmap(this.getSubBitmap(0, 0, x_hold), this.x, this.y, null);
 
-        if(x_hold < 700)
-            canvas.drawBitmap(this.getSubBitmap(0, 0, 700 - x_hold),
+        if(x_hold < x_max)
+            canvas.drawBitmap(this.getSubBitmap(0, 0, x_max - x_hold),
                     this.x + x_hold + hold_width, this.y, null);
     }
 

@@ -5,13 +5,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.os.Build;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
 import com.example.firstgame.object.Background;
@@ -145,7 +143,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                             ObjectSize.WALL_WIDTH*2 + ObjectSize.ROAD_WIDTH, ObjectSize.ROAD_HEIGHT);
                     basicThreat = new Threat(background, threatBitmap, ObjectSize.ROAD_WIDTH,
                             ObjectSize.HOLD_HEIGHT, 300, 80);
-                    score = new Score(scoreBitmap);
+                    score = new Score(GameView.this, scoreBitmap, 250, 300);
                 }
                 else System.out.println("Error");
 
