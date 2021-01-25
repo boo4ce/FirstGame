@@ -5,13 +5,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.os.Build;
+import android.renderscript.ScriptGroup;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
 import com.example.firstgame.object.Background;
@@ -59,8 +58,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        this.background.draw(canvas);
-        score.displayScore(canvas);
+//        this.background.draw(canvas);
+        score.draw(canvas);
         for(int i = 0; i < threats.size(); i++) {
             threats.get(i).draw(canvas);
         }
@@ -121,34 +120,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                InputStream inputStream = getResources().openRawResource(R.drawable.vn_ball);
-                Bitmap ballBitmap = BitmapFactory.decodeStream(inputStream);
 
-                inputStream = getResources().openRawResource(R.drawable.background);
-                Bitmap bgBitmap = BitmapFactory.decodeStream(inputStream);
+                Bitmap[] bitmaps = new Bitmap[20];
+                int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
+                        R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
+                        R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.vn_ball, //8, 9, 10, 11
+                        R.drawable.setting_icon, R.drawable.threat}; //12, 13
+                InputStream inputStream;
 
-                inputStream = getResources().openRawResource(R.drawable.threat);
-                Bitmap threatBitmap = BitmapFactory.decodeStream(inputStream);
-
-                Bitmap[] scoreBitmap = new Bitmap[10];
-                int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three,
-                        R.drawable.four, R.drawable.five, R.drawable.six,
-                        R.drawable.seven, R.drawable.eight, R.drawable.nine};
-                for(int i = 0; i < 10; i++) {
+                for(int i = 0; i < list.length; i++) {
                     inputStream = getResources().openRawResource(list[i]);
-                    scoreBitmap[i] = BitmapFactory.decodeStream(inputStream);
+                    bitmaps[i] = BitmapFactory.decodeStream(inputStream);
+
                 }
 
-                if(ballBitmap != null && bgBitmap != null && threatBitmap != null && scoreBitmap != null) {
-                    ball = new Ball(GameView.this, ballBitmap, ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
-                    background = new Background(GameView.this, bgBitmap,
-                            ObjectSize.WALL_WIDTH*2 + ObjectSize.ROAD_WIDTH, ObjectSize.ROAD_HEIGHT);
-                    basicThreat = new Threat(background, threatBitmap, ObjectSize.ROAD_WIDTH,
+                if(true) {
+                    ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
+                    basicThreat = new Threat(GameView.this, bitmaps[13], ObjectSize.ROAD_WIDTH,
                             ObjectSize.HOLD_HEIGHT, 300, 80);
-                    score = new Score(scoreBitmap);
+                    score = new Score(GameView.this, bitmaps, 250, 300);
                 }
-                else System.out.println("Error");
-
             }
         }).start();
     }
