@@ -23,7 +23,4 @@ public class MyMath {
         return lenghtOfThirdEdge1(x_centerBall, y_centerBall, x_centerRect, y_centerRect, x_rest, y_rest);
     }
 
-    public static int gcd(int number1, int number2) {
-
-    }
 }

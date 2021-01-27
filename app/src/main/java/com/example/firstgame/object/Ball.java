@@ -39,7 +39,7 @@ public class Ball extends GameObject implements CommonFunction{
 
         this.way = (new Random().nextBoolean())?Ball.TO_LEFT:Ball.TO_RIGHT;
 
-        move_per_time = gameView.getWidth()/72;
+        move_per_time = gameView.getWidth()/108;
     }
 
     // get each state of ball

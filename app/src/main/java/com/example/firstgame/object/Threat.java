@@ -33,14 +33,16 @@ public class Threat extends GameObject implements CommonFunction {
         this.gameView = gameView;
         this.ball = ball;
 
-        hori_move = ball.getMove_per_time();
-
-        this.x = 0;
-        this.y = -height;
-        this.hold_width = hold_width;
-        this.hold_height = hold_height;
+        hori_move = ball.getMove_per_time()*3/2;
 
         this.speedUp_line_y = ball.getY() - ball.getHeight()*3/2;
+        this.verti_move = Math.round(speedUp_line_y/120);
+        this.verti_move_boost = ball.getHeight()/8;
+
+        this.x = 0;
+        this.y = (verti_move*50 - speedUp_line_y) - height;
+        this.hold_width = hold_width;
+        this.hold_height = hold_height;
 
         // 1080 - 300 = 780
         x_max = gameView.getWidth() - hold_width;
@@ -61,8 +63,8 @@ public class Threat extends GameObject implements CommonFunction {
 
     @Override
     public void update() {
-        if(this.y < speedUp_line_y) this.y += move;
-        else this.y += move*2;
+        if(this.y < speedUp_line_y) this.y += verti_move;
+        else this.y += verti_move_boost;
 
         if(!running) return;
         if(direct) this.x_hold += hori_move;
