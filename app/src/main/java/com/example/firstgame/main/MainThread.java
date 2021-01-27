@@ -45,7 +45,7 @@ public class MainThread extends Thread {
                     }
                 }
 
-                if(count_frm.getCount() == 16*10) {
+                if(count_frm.getCount() == 112) {
                     synchronized (this.count_frm) {
                         count_frm.notify();
                         count_frm.setCount(0);
