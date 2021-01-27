@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -19,6 +20,7 @@ import com.example.firstgame.object.Threat;
 import com.example.firstgame.score.Score;
 
 import java.io.InputStream;
+import java.util.EventListener;
 import java.util.Vector;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
@@ -107,7 +109,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }).start();
 
         this.setOnTouchListener((view, motionEvent) -> {
-            gameController.touchProcess(motionEvent);
+            int performClick = motionEvent.getAction();
+            if(performClick == MotionEvent.ACTION_DOWN) gameController.touchProcess(motionEvent);
             return true;
         });
     }

@@ -49,7 +49,7 @@ public class GameController {
             }
         }
 
-        threats.add(basicThreat);
+        threats.add(basicThreat.clone());
     }
 
     public boolean checkCollision() {
@@ -68,6 +68,7 @@ public class GameController {
 
     public void touchProcess(MotionEvent motionEvent) {
         int num_touch = motionEvent.getPointerCount();
+        System.out.println(num_touch);
         switch(num_touch) {
             case 1:
                 if(running == false) reset();
