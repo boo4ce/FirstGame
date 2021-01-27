@@ -38,6 +38,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Threat basicThreat;
 
     public boolean running;
+    public boolean pause;
+
     Bitmap[] bitmaps = new Bitmap[20];
 
     public GameView(Context context) {
@@ -49,9 +51,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        this.ball.update();
-        for(int i = 0; i < threats.size(); i++) {
-            threats.get(i).update();
+        if(!pause) {
+            this.ball.update();
+            for(int i = 0; i < threats.size(); i++) {
+                threats.get(i).update();
+            }
         }
     }
 
@@ -63,7 +67,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             threats.get(i).draw(canvas);
         }
         this.ball.draw(canvas);
-        canvas.drawBitmap(bitmaps[14], 1080-160, 0, null);
+//        canvas.drawBitmap(bitmaps[14], 1080-160, 0, null);
     }
 
     public void threatController() {
@@ -132,6 +136,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         this.mainThread = new MainThread(getHolder(), this, count_frm);
         this.running = true;
+        this.pause = false;
 
         this.supportThread = new SupportThread(this, count_frm);
 
@@ -146,6 +151,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         threats.clear();
 
         running = true;
+        pause = false;
     }
 
     @Override
@@ -153,30 +159,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.createObject();
         this.newGame();
 
-//        this.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(running == false) clear();
-//                else
-//                    for(int i = 0; i < threats.size(); i++)
-//                        if(threats.get(i).getHoldState()) {
-//                            threats.get(i).stopHold(); break;
-//                        }
-//            }
-//        });
         this.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int num_touch = motionEvent.getPointerCount();
                 switch(num_touch) {
                     case 1:
+                        if(running == false) {
+                            clear();
+                            synchronized (mainThread) {
+                                mainThread.notifyAll();
+                            }
+                        }
                         for(int i = 0; i < threats.size(); i++)
                             if(threats.get(i).getHoldState()) {
                                 threats.get(i).stopHold(); break;
                             }
                         break;
-                    case 2: running = !running; break;
-                    default:
+                    case 2: pause = !pause; break;
+                    default: break;
                 }
                 return true;
             }

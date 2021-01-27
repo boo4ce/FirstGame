@@ -57,6 +57,15 @@ public class MainThread extends Thread {
                     e.printStackTrace();
                 }
             }
+            else {
+                synchronized (this) {
+                    try {
+                        this.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
 
     }
