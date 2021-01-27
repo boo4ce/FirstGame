@@ -1,9 +1,9 @@
 package com.example.firstgame.object;
 
-public class CountFrame {
+public class RespawnTime {
     private int count;
 
-    public CountFrame(int count) {
+    public RespawnTime(int count) {
         this.count = count;
     }
 
@@ -17,5 +17,9 @@ public class CountFrame {
 
     public void increase() {
         count++;
+    }
+
+    public void reset() {
+        count = 0;
     }
 }

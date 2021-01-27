@@ -5,40 +5,32 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.renderscript.ScriptGroup;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.example.firstgame.R;
-import com.example.firstgame.object.Background;
+import com.example.firstgame.controller.GameController;
 import com.example.firstgame.object.Ball;
-import com.example.firstgame.object.CountFrame;
-import com.example.firstgame.object.Geometry;
-import com.example.firstgame.object.Hold;
+import com.example.firstgame.object.RespawnTime;
 import com.example.firstgame.object.ObjectSize;
 import com.example.firstgame.object.Threat;
 import com.example.firstgame.score.Score;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Vector;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+    private GameController gameController;
     private MainThread mainThread;
     private SupportThread supportThread;
 
     private Ball ball;
     private Vector<Threat> threats;
     private Score score;
-
+    private RespawnTime respawnTime;
     private Threat basicThreat;
-
-    public boolean running;
-    public boolean pause;
 
     Bitmap[] bitmaps = new Bitmap[20];
 
@@ -46,51 +38,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         this.setFocusable(true);
         getHolder().addCallback(this);
-
-        threats = new Vector<>();
-    }
-
-    public void update() {
-        this.ball.update();
-        for(int i = 0; i < threats.size(); i++) {
-            threats.get(i).update();
-        }
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        score.draw(canvas);
+        gameController.getScore().draw(canvas);
+        Vector<Threat> threats = gameController.getThreats();
         for(int i = 0; i < threats.size(); i++) {
             threats.get(i).draw(canvas);
         }
-        this.ball.draw(canvas);
+        gameController.getBall().draw(canvas);
 //        canvas.drawBitmap(bitmaps[14], 1080-160, 0, null);
     }
 
-    public void threatController() {
-        for(int i = 0; i < threats.size(); i++) {
-            if(threats.get(i).die()) {
-                threats.remove(i);
-            }
-        }
 
-        threats.add(basicThreat.clone());
-    }
-
-    public boolean checkCollision() {
-        int flag;
-        for(int i = 0; i < threats.size(); i++) {
-            flag = threats.get(i).checkCollision_and_getScore();
-            switch(flag) {
-                case Threat.COLLISION: return true;
-                case Threat.GET_SCORE: score.gainScore(); break;
-                case Threat.IN_HOLD: score.unlock(); break;
-                case Threat.NO_COLLISION:
-            }
-        }
-        return false;
-    }
 
     private Bitmap[] subArray(Bitmap[] arr, int start_index, int end_index) {
         if(start_index > end_index) return null;
@@ -103,98 +65,50 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     @SuppressLint("ResourceType")
-    private void createObject() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
-                        R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
-                        R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.vn_ball, //8, 9, 10, 11
-                        R.drawable.setting_icon, R.drawable.threat, R.drawable.setting_icon}; //12, 13, 14
-                InputStream inputStream;
+    private void initGame() {
+        int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
+                R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
+                R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.vn_ball, //8, 9, 10, 11
+                R.drawable.setting_icon, R.drawable.threat, R.drawable.setting_icon}; //12, 13, 14
+        InputStream inputStream;
 
-                for(int i = 0; i < list.length; i++) {
-                    inputStream = getResources().openRawResource(list[i]);
-                    bitmaps[i] = BitmapFactory.decodeStream(inputStream);
+        for(int i = 0; i < list.length; i++) {
+            inputStream = getResources().openRawResource(list[i]);
+            bitmaps[i] = BitmapFactory.decodeStream(inputStream);
 
-                }
-
-                ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
-                basicThreat = new Threat(GameView.this, ball, bitmaps[13], ObjectSize.ROAD_WIDTH,
-                        ObjectSize.HOLD_HEIGHT, 300, 80);
-                score = new Score(GameView.this, bitmaps[10],
-                        subArray(bitmaps, 0, 9), 250, 300);
-
-            }
-        }).start();
-    }
-
-    private void newGame() {
-        CountFrame count_frm = new CountFrame(0);
-
-        this.mainThread = new MainThread(getHolder(), this, count_frm);
-        this.running = true;
-        this.pause = false;
-
-        this.supportThread = new SupportThread(this, count_frm);
-
-        this.supportThread.start();
-        this.mainThread.start();
-    }
-
-    private void clear() {
-        score.reset();
-        threats.clear();
-        ball.reset();
-        threats.clear();
-
-        running = true;
-        pause = false;
-    }
-
-    private void resume() {
-        if(pause == true) {
-            synchronized (mainThread) {
-                mainThread.notifyAll();
-            }
         }
-        pause = !pause;
-        return;
-    }
 
-    private void restart() {
-        if(running == false) {
-            this.clear();
-            synchronized (mainThread) {
-                mainThread.notifyAll();
-            }
-            return;
-        }
+        ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
+        basicThreat = new Threat(GameView.this, ball, bitmaps[13], ObjectSize.ROAD_WIDTH,
+                ObjectSize.HOLD_HEIGHT, 300, 80);
+        score = new Score(GameView.this, bitmaps[10],
+                subArray(bitmaps, 0, 9), 250, 300);
+        threats = new Vector<Threat>();
+
+        respawnTime = new RespawnTime(0);
+        this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
+                threats, score);
+
+        mainThread = new MainThread(this, this.gameController, respawnTime);
+
+        supportThread = new SupportThread(this.gameController, respawnTime);
+
+        supportThread.start();
+        mainThread.start();
     }
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
-        this.createObject();
-        this.newGame();
-
-        this.setOnTouchListener(new View.OnTouchListener() {
+        new Thread(new Runnable() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                int num_touch = motionEvent.getPointerCount();
-                switch(num_touch) {
-                    case 1:
-                        for(int i = 0; i < threats.size(); i++)
-                            if(threats.get(i).getHoldState()) {
-                                threats.get(i).stopHold(); break;
-                            }
-                        resume_or_restart();
-                        break;
-                    case 2: pause = !pause; break;
-
-                    default: break;
-                }
-                return true;
+            public void run() {
+                initGame();
             }
+        }).start();
+
+        this.setOnTouchListener((view, motionEvent) -> {
+            gameController.touchProcess(motionEvent);
+            return true;
         });
     }
 
