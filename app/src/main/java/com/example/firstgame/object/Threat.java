@@ -7,7 +7,7 @@ import com.example.firstgame.main.GameView;
 
 import java.util.Random;
 
-public class Threat extends GameObject {
+public class Threat extends GameObject implements CommonFunction {
     public static final int COLLISION = 0;
     public static final int GET_SCORE = 2;
     public static final int NO_COLLISION = 1;
@@ -24,7 +24,7 @@ public class Threat extends GameObject {
 
     private int hold_width, hold_height;
 
-    private final int move = 10;
+    private final int hori_move, verti_move, verti_move_boost;
 
     public Threat(GameView gameView, Ball ball, Bitmap image, int width, int height,
                   int hold_width, int hold_height) {
@@ -33,17 +33,20 @@ public class Threat extends GameObject {
         this.gameView = gameView;
         this.ball = ball;
 
+        hori_move = ball.getMove_per_time();
+
         this.x = 0;
         this.y = -height;
         this.hold_width = hold_width;
         this.hold_height = hold_height;
 
         this.speedUp_line_y = ball.getY() - ball.getHeight()*3/2;
+
         // 1080 - 300 = 780
         x_max = gameView.getWidth() - hold_width;
 
-        int tmp = x_max/10 + 1;
-        this.x_hold = Math.abs(new Random().nextInt() % tmp)*10;
+        int tmp = x_max/hori_move + 1;
+        this.x_hold = Math.abs(new Random().nextInt() % tmp)*hori_move;
 
         this.direct = (new Random()).nextBoolean();
 
@@ -56,17 +59,24 @@ public class Threat extends GameObject {
         effected = false;
     }
 
+    @Override
     public void update() {
         if(this.y < speedUp_line_y) this.y += move;
         else this.y += move*2;
 
         if(!running) return;
-        if(direct) this.x_hold += 10;
-        else this.x_hold -= 10;
+        if(direct) this.x_hold += hori_move;
+        else this.x_hold -= hori_move;
         if(x_hold <= 0 || x_hold >= x_max)
             direct = !direct;
     }
 
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
     public void draw(Canvas canvas) {
         if(x_hold > 0)
             canvas.drawBitmap(this.getSubBitmap(0, 0, x_hold), this.x, this.y, null);
@@ -75,6 +85,7 @@ public class Threat extends GameObject {
             canvas.drawBitmap(this.getSubBitmap(0, 0, x_max - x_hold),
                     this.x + x_hold + hold_width, this.y, null);
     }
+
 
     public boolean die() {
         return this.y >= gameView.getHeight();
@@ -91,10 +102,6 @@ public class Threat extends GameObject {
     private Bitmap getSubBitmap(int x, int y, int width) {
         Bitmap bitmap = Bitmap.createBitmap(image, x, y, width, this.hold_height);
         return bitmap;
-    }
-
-    public Hold getHold() {
-        return new Hold(x + x_hold, y, this.hold_width, this.hold_height);
     }
 
     public boolean getHoldState() {
@@ -116,19 +123,19 @@ public class Threat extends GameObject {
 
         // 240 = this.height + ball.height
         if(this.y <= ball.getY() + 240) {
-            double a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+            double a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
                     hold_center_x, hold_center_y, x_hold + hold_width, this.y);
             if (a < ball.getPerimeter()) return Threat.COLLISION;
 
-            a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+            a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
                     hold_center_x, hold_center_y, x_hold, this.y);
             if (a < ball.getPerimeter()) return Threat.COLLISION;
 
-            a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+            a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
                     hold_center_x, hold_center_y, x_hold, this.y + hold_height);
             if (a < ball.getPerimeter()) return Threat.COLLISION;
 
-            a = Geometry.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+            a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
                     hold_center_x, hold_center_y, x_hold + hold_width, this.y + hold_height);
             if (a < ball.getPerimeter()) return Threat.COLLISION;
 

@@ -2,19 +2,18 @@ package com.example.firstgame.object;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 
 import com.example.firstgame.main.GameView;
 
 import java.util.Random;
 
-public class Ball extends GameObject {
+public class Ball extends GameObject implements CommonFunction{
     // status of ball
     private static final int TO_LEFT = 0;
     private static final int TO_RIGHT = 1;
 
     // number of pixel to move ball per time
-    private final int move_per_time = 10;
+    private final int move_per_time;
 
     // exactly position of ball's state
     private int current_col = 0;
@@ -39,6 +38,8 @@ public class Ball extends GameObject {
         this.y = (gameView.getHeight()/10)*10 - height*2;
 
         this.way = (new Random().nextBoolean())?Ball.TO_LEFT:Ball.TO_RIGHT;
+
+        move_per_time = gameView.getWidth()/72;
     }
 
     // get each state of ball
@@ -88,5 +89,9 @@ public class Ball extends GameObject {
 
     public void changeState() {
         this.way = 1 - this.way;
+    }
+
+    public int getMove_per_time() {
+        return move_per_time;
     }
 }

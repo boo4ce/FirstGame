@@ -3,6 +3,8 @@ package com.example.firstgame.controller;
 import android.view.MotionEvent;
 
 import com.example.firstgame.main.GameView;
+import com.example.firstgame.main.MainThread;
+import com.example.firstgame.main.SupportThread;
 import com.example.firstgame.object.Ball;
 import com.example.firstgame.object.RespawnTime;
 import com.example.firstgame.object.Threat;
@@ -25,6 +27,10 @@ public class GameController {
     private boolean running = true;
     private boolean pause = false;
 
+    // thread
+    private MainThread mainThread;
+    private SupportThread supportThread;
+
     public GameController(GameView gameView, RespawnTime respawnTime, Ball ball, Threat basicThreat,
                           Vector<Threat> threats, Score score) {
         this.gameView = gameView;
@@ -33,6 +39,15 @@ public class GameController {
         this.score = score;
         this.basicThreat = basicThreat;
         this.respawnTime = respawnTime;
+
+        this.mainThread = new MainThread(gameView, this, respawnTime);
+        this.supportThread = new SupportThread(this, respawnTime);
+
+    }
+
+    public void runGame() {
+        mainThread.start();
+        supportThread.start();
     }
 
     public void update() {
@@ -66,12 +81,26 @@ public class GameController {
         return false;
     }
 
+    private void restart() {
+        synchronized (this.mainThread) {
+            reset();
+            this.mainThread.notify();
+        }
+    }
+
+    public void resume() {
+        synchronized (this.mainThread) {
+            pause = false;
+            this.mainThread.notify();
+        }
+    }
+
     public void touchProcess(MotionEvent motionEvent) {
         int num_touch = motionEvent.getPointerCount();
-        System.out.println(num_touch);
+
         switch(num_touch) {
             case 1:
-                if(running == false) reset();
+                if(running == false) restart();
                 else {
                     for(int i = 0; i < threats.size(); i++)
                         if(threats.get(i).getHoldState()) {
@@ -79,7 +108,9 @@ public class GameController {
                         }
                 }
                 break;
-            case 2: pause = !pause; break;
+            case 2:
+                if(pause == true) resume();
+                pause = !pause; break;
 
             default: break;
         }

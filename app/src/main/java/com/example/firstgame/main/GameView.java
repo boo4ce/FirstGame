@@ -25,14 +25,6 @@ import java.util.Vector;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
-    private MainThread mainThread;
-    private SupportThread supportThread;
-
-    private Ball ball;
-    private Vector<Threat> threats;
-    private Score score;
-    private RespawnTime respawnTime;
-    private Threat basicThreat;
 
     Bitmap[] bitmaps = new Bitmap[20];
 
@@ -80,23 +72,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         }
 
-        ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
-        basicThreat = new Threat(GameView.this, ball, bitmaps[13], ObjectSize.ROAD_WIDTH,
+        Ball ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
+        Threat basicThreat = new Threat(GameView.this, ball, bitmaps[13], ObjectSize.ROAD_WIDTH,
                 ObjectSize.HOLD_HEIGHT, 300, 80);
-        score = new Score(GameView.this, bitmaps[10],
+        Score score = new Score(GameView.this, bitmaps[10],
                 subArray(bitmaps, 0, 9), 250, 300);
-        threats = new Vector<Threat>();
 
-        respawnTime = new RespawnTime(0);
+        RespawnTime respawnTime = new RespawnTime(0);
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
-                threats, score);
+                new Vector<>(), score);
 
-        mainThread = new MainThread(this, this.gameController, respawnTime);
-
-        supportThread = new SupportThread(this.gameController, respawnTime);
-
-        supportThread.start();
-        mainThread.start();
     }
 
     @Override
@@ -105,6 +90,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             @Override
             public void run() {
                 initGame();
+                gameController.runGame();
             }
         }).start();
 
