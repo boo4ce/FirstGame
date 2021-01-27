@@ -20,7 +20,7 @@ public class MainThread extends Thread {
     @Override
     public void run() {
         while(true) {
-            if(gameView.running) {
+            if(gameView.running && !gameView.pause) {
                 Canvas canvas = null;
                 try {
                     canvas = this.surfaceHolder.lockCanvas();

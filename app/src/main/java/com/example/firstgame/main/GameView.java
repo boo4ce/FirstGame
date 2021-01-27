@@ -51,11 +51,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        if(!pause) {
-            this.ball.update();
-            for(int i = 0; i < threats.size(); i++) {
-                threats.get(i).update();
-            }
+        this.ball.update();
+        for(int i = 0; i < threats.size(); i++) {
+            threats.get(i).update();
         }
     }
 
@@ -154,6 +152,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         pause = false;
     }
 
+    private void resume() {
+        if(pause == true) {
+            synchronized (mainThread) {
+                mainThread.notifyAll();
+            }
+        }
+        pause = !pause;
+        return;
+    }
+
+    private void restart() {
+        if(running == false) {
+            this.clear();
+            synchronized (mainThread) {
+                mainThread.notifyAll();
+            }
+            return;
+        }
+    }
+
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         this.createObject();
@@ -165,18 +183,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 int num_touch = motionEvent.getPointerCount();
                 switch(num_touch) {
                     case 1:
-                        if(running == false) {
-                            clear();
-                            synchronized (mainThread) {
-                                mainThread.notifyAll();
-                            }
-                        }
                         for(int i = 0; i < threats.size(); i++)
                             if(threats.get(i).getHoldState()) {
                                 threats.get(i).stopHold(); break;
                             }
+                        resume_or_restart();
                         break;
                     case 2: pause = !pause; break;
+
                     default: break;
                 }
                 return true;
