@@ -103,23 +103,18 @@ public class GameController {
     }
 
     public void touchProcess(MotionEvent motionEvent) {
-        int num_touch = motionEvent.getPointerCount();
-        switch(num_touch) {
-            case 1:
-                if(running == false) restart();
-                else {
-                    for(int i = 0; i < threats.size(); i++)
-                        if(threats.get(i).getHoldState()) {
-                            threats.get(i).stopHold(); break;
-                        }
-                }
-                break;
-            case 2:
-                if(pause == true) resume();
-                else pause = !pause;
-                break;
-
-            default: break;
+        if(motionEvent.getX() >= gameView.getWidth() - 80 && motionEvent.getY() <= 80) {
+            if(pause == true) resume();
+            else pause = !pause;
+        }
+        else {
+            if(running == false) restart();
+            else {
+                for(int i = 0; i < threats.size(); i++)
+                    if(threats.get(i).getHoldState()) {
+                        threats.get(i).stopHold(); break;
+                    }
+            }
         }
     }
 
