@@ -25,6 +25,7 @@ import java.util.Vector;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
+//    private final int viewWidth, viewHeight;
 
     Bitmap[] bitmaps = new Bitmap[20];
 
@@ -43,7 +44,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             threats.get(i).draw(canvas);
         }
         gameController.getBall().draw(canvas);
-//        canvas.drawBitmap(bitmaps[14], 1080-160, 0, null);
+        canvas.drawBitmap(bitmaps[14], this.getWidth() - 80, 0, null);
     }
 
 
@@ -72,6 +73,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         }
 
+        bitmaps[14] = Bitmap.createScaledBitmap(bitmaps[14], bitmaps[14].getWidth()/2,
+                bitmaps[14].getHeight()/2, false);
+
         Ball ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
         Threat basicThreat = new Threat(GameView.this, ball, bitmaps[13], ObjectSize.ROAD_WIDTH,
                 ObjectSize.HOLD_HEIGHT, 300, 80);
@@ -82,6 +86,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
                 new Vector<>(), score);
 
+        gameController.setLevel(GameController.EASY);
     }
 
     @Override
@@ -95,8 +100,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }).start();
 
         this.setOnTouchListener((view, motionEvent) -> {
-            int performClick = motionEvent.getAction();
-            if(performClick == MotionEvent.ACTION_DOWN) gameController.touchProcess(motionEvent);
+            if(motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                gameController.touchProcess(motionEvent);
             return true;
         });
     }

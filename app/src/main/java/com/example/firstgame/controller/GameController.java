@@ -13,6 +13,11 @@ import com.example.firstgame.score.Score;
 import java.util.Vector;
 
 public class GameController {
+    //level
+    public static final int EASY = 200;
+    public static final int NORMAL = 160;
+    public static final int HARD = 120;
+
     // game view
     private GameView gameView;
 
@@ -30,6 +35,8 @@ public class GameController {
     // thread
     private MainThread mainThread;
     private SupportThread supportThread;
+
+    private int level;
 
     public GameController(GameView gameView, RespawnTime respawnTime, Ball ball, Threat basicThreat,
                           Vector<Threat> threats, Score score) {
@@ -97,7 +104,6 @@ public class GameController {
 
     public void touchProcess(MotionEvent motionEvent) {
         int num_touch = motionEvent.getPointerCount();
-
         switch(num_touch) {
             case 1:
                 if(running == false) restart();
@@ -110,7 +116,8 @@ public class GameController {
                 break;
             case 2:
                 if(pause == true) resume();
-                pause = !pause; break;
+                else pause = !pause;
+                break;
 
             default: break;
         }
@@ -148,5 +155,13 @@ public class GameController {
 
     public void gamePause() {
         pause = true;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

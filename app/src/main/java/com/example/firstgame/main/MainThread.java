@@ -46,7 +46,7 @@ public class MainThread extends Thread {
                         }
                     }
 
-                    if(count_frm.getCount() == 112) {
+                    if(count_frm.getCount() == gameController.getLevel()) {
                         synchronized (this.count_frm) {
                             count_frm.notify();
                             count_frm.reset();

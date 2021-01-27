@@ -52,8 +52,8 @@ public class Ball extends GameObject implements CommonFunction{
     public void update() {
         if(this.way == Ball.TO_LEFT) x -= move_per_time;
         else x += move_per_time;
-        if(x == ObjectSize.WALL_WIDTH ||
-                x == gameView.getWidth() - ObjectSize.WALL_WIDTH - this.width)
+        if(x <= ObjectSize.WALL_WIDTH ||
+                x >= gameView.getWidth() - ObjectSize.WALL_WIDTH - this.width)
             this.way = 1 - this.way;
 
         current_col++;
