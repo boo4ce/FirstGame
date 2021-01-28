@@ -1,4 +1,4 @@
-package com.example.firstgame.object;
+  package com.example.firstgame.object;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -35,7 +35,7 @@ public class Ball extends GameObject implements CommonFunction{
         getRolling(col, row);
 
         this.x = (gameView.getWidth() - width) / 2;
-        this.y = (gameView.getHeight()/10)*10 - height*2;
+        this.y = gameView.getHeight()/128*100;
 
         this.way = (new Random().nextBoolean())?Ball.TO_LEFT:Ball.TO_RIGHT;
 
