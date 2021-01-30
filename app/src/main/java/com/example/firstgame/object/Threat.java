@@ -3,7 +3,7 @@ package com.example.firstgame.object;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import com.example.firstgame.main.GameView;
+import com.example.firstgame.view.GameView;
 
 import java.util.Random;
 
@@ -37,10 +37,10 @@ public class Threat extends GameObject implements CommonFunction {
 
         this.verti_move = gameView.getHeight()/128;
         this.speedUp_line_y = ball.getY() - verti_move*24;
-        this.verti_move_boost = verti_move*3/2;
+        this.verti_move_boost = verti_move*2;
 
         this.x = 0;
-        this.y = -20*verti_move;
+        this.y = -10*verti_move - height;
         this.hold_width = hold_width;
         this.hold_height = hold_height;
 
@@ -127,21 +127,29 @@ public class Threat extends GameObject implements CommonFunction {
         if(this.y <= ball.getY() + 240) {
             double a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
                     hold_center_x, hold_center_y, x_hold + hold_width, this.y);
-            if (a < ball.getPerimeter()) return Threat.COLLISION;
+            if (a < ball.getPerimeter()) {
+                return Threat.COLLISION;
+            }
 
             a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
                     hold_center_x, hold_center_y, x_hold, this.y);
-            if (a < ball.getPerimeter()) return Threat.COLLISION;
+            if (a < ball.getPerimeter()) {
+                return Threat.COLLISION;
+            }
 
             a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
                     hold_center_x, hold_center_y, x_hold, this.y + hold_height);
-            if (a < ball.getPerimeter()) return Threat.COLLISION;
+            if (a < ball.getPerimeter()) {
+                return Threat.COLLISION;
+            }
 
             a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
                     hold_center_x, hold_center_y, x_hold + hold_width, this.y + hold_height);
-            if (a < ball.getPerimeter()) return Threat.COLLISION;
+            if (a < ball.getPerimeter()) {
+                return Threat.COLLISION;
+            }
 
-            if (x_hold > ball.getCenter_x() || x_hold + 300 < ball.getCenter_x())
+            if (x_hold > ball.getCenter_x() || x_hold + this.hold_height < ball.getCenter_x())
                 return Threat.COLLISION;
 
             return Threat.IN_HOLD;

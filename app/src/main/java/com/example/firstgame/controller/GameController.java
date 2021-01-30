@@ -2,9 +2,8 @@ package com.example.firstgame.controller;
 
 import android.view.MotionEvent;
 
-import com.example.firstgame.main.GameView;
-import com.example.firstgame.main.MainThread;
-import com.example.firstgame.main.SupportThread;
+import com.example.firstgame.view.GameView;
+import com.example.firstgame.thread.MainThread;
 import com.example.firstgame.object.Ball;
 import com.example.firstgame.object.RespawnTime;
 import com.example.firstgame.object.Threat;
@@ -17,6 +16,10 @@ public class GameController {
     public static final int EASY = 200;
     public static final int NORMAL = 160;
     public static final int HARD = 120;
+
+    //pause
+    public static final int PAUSE = 1;
+    public static final int NOT_PAUSE = 0;
 
     // game view
     private GameView gameView;
@@ -34,7 +37,6 @@ public class GameController {
 
     // thread
     private MainThread mainThread;
-    private SupportThread supportThread;
 
     private int level;
 
@@ -48,13 +50,11 @@ public class GameController {
         this.respawnTime = respawnTime;
 
         this.mainThread = new MainThread(gameView, this, respawnTime);
-        this.supportThread = new SupportThread(this, respawnTime);
 
     }
 
     public void runGame() {
         mainThread.start();
-        supportThread.start();
     }
 
     public void update() {
@@ -88,7 +88,7 @@ public class GameController {
         return false;
     }
 
-    private void restart() {
+    public void restart() {
         synchronized (this.mainThread) {
             reset();
             this.mainThread.notify();
@@ -102,10 +102,12 @@ public class GameController {
         }
     }
 
-    public void touchProcess(MotionEvent motionEvent) {
+    public int touchProcess(MotionEvent motionEvent) {
         if(motionEvent.getX() >= gameView.getWidth() - 80 && motionEvent.getY() <= 80) {
             if(pause == true) resume();
             else pause = !pause;
+
+            return GameController.PAUSE;
         }
         else {
             if(running == false) restart();
@@ -115,6 +117,7 @@ public class GameController {
                         threats.get(i).stopHold(); break;
                     }
             }
+            return GameController.NOT_PAUSE;
         }
     }
 
@@ -158,5 +161,9 @@ public class GameController {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public boolean isPause() {
+        return pause;
     }
 }

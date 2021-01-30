@@ -1,10 +1,14 @@
-package com.example.firstgame.main;
+package com.example.firstgame.thread;
 
 import android.graphics.Canvas;
+import android.os.Build;
 import android.view.SurfaceHolder;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.controller.GameController;
 import com.example.firstgame.object.RespawnTime;
+import com.example.firstgame.view.GameView;
 
 public class MainThread extends Thread {
     private SurfaceHolder surfaceHolder;
@@ -19,6 +23,24 @@ public class MainThread extends Thread {
         this.gameView = gameView;
     }
 
+    private void updateCanvas() {
+        Canvas canvas = null;
+        try {
+            canvas = this.surfaceHolder.lockCanvas();
+            synchronized (canvas) {
+                gameView.draw(canvas);
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+        finally {
+            if(canvas != null) {
+                this.surfaceHolder.unlockCanvasAndPost(canvas);
+            }
+        }
+    }
+
     @Override
     public void run() {
         while(true) {
@@ -27,39 +49,18 @@ public class MainThread extends Thread {
                     gameController.setGameOver();
                 }
                 else {
-                    Canvas canvas = null;
-                    try {
-                        canvas = this.surfaceHolder.lockCanvas();
-                        synchronized (canvas) {
-                            gameController.update();
-                            gameView.draw(canvas);
+                    gameController.update();
+                    this.updateCanvas();
 
-                            this.count_frm.increase();
-                        }
-                    }
-                    catch (Exception e) {
-                        System.out.println(e);
-                    }
-                    finally {
-                        if(canvas != null) {
-                            this.surfaceHolder.unlockCanvasAndPost(canvas);
-                        }
-                    }
-
+                    this.count_frm.increase();
                     if(count_frm.getCount() == gameController.getLevel()) {
-                        synchronized (this.count_frm) {
-                            count_frm.notify();
-                            count_frm.reset();
-                        }
-                    }
-                    try {
-                        Thread.sleep(5);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        gameController.threatController();
+                        count_frm.reset();
                     }
                 }
             }
             else {
+                this.updateCanvas();
                 synchronized (this) {
                     try {
                         this.wait();
@@ -67,6 +68,11 @@ public class MainThread extends Thread {
                         e.printStackTrace();
                     }
                 }
+            }
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 

@@ -1,19 +1,27 @@
-package com.example.firstgame.main;
+package com.example.firstgame.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewOverlay;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
 import com.example.firstgame.controller.GameController;
+import com.example.firstgame.menu.PauseDrawable;
 import com.example.firstgame.object.Ball;
 import com.example.firstgame.object.RespawnTime;
 import com.example.firstgame.object.ObjectSize;
@@ -21,12 +29,12 @@ import com.example.firstgame.object.Threat;
 import com.example.firstgame.score.Score;
 
 import java.io.InputStream;
-import java.util.EventListener;
 import java.util.Vector;
 
+@SuppressLint("ResourceType")
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
-//    private final int viewWidth, viewHeight;
+    private PauseDrawable drawable;
 
     Bitmap[] bitmaps = new Bitmap[20];
 
@@ -34,21 +42,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         this.setFocusable(true);
         getHolder().addCallback(this);
+
+//        pauseView = new PauseView(this.getContext());
+        drawable = new PauseDrawable();
     }
 
     @Override
     public void draw(Canvas canvas) {
-        super.draw(canvas);
-        gameController.getScore().draw(canvas);
-        Vector<Threat> threats = gameController.getThreats();
-        for(int i = 0; i < threats.size(); i++) {
-            threats.get(i).draw(canvas);
+        synchronized (gameController) {
+            super.draw(canvas);
+            gameController.getScore().draw(canvas);
+            Vector<Threat> threats = gameController.getThreats();
+            for(int i = 0; i < threats.size(); i++) {
+                threats.get(i).draw(canvas);
+            }
+            gameController.getBall().draw(canvas);
+            canvas.drawBitmap(bitmaps[14], this.getWidth() - 80, 0, null);
+            if(gameController.isPause()) drawable.draw(canvas);
         }
-        gameController.getBall().draw(canvas);
-        canvas.drawBitmap(bitmaps[14], this.getWidth() - 80, 0, null);
     }
-
-
 
     private Bitmap[] subArray(Bitmap[] arr, int start_index, int end_index) {
         if(start_index > end_index) return null;
@@ -60,7 +72,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return subArr;
     }
 
-    @SuppressLint("ResourceType")
     private void initGame() {
         int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
                 R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
@@ -87,9 +98,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
                 new Vector<>(), score);
 
-        gameController.setLevel(GameController.EASY);
+        gameController.setLevel(GameController.HARD);
     }
 
+    int a = 1;
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         new Thread(new Runnable() {
@@ -102,7 +114,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         this.setOnTouchListener((view, motionEvent) -> {
             if(motionEvent.getAction() == MotionEvent.ACTION_DOWN)
-                gameController.touchProcess(motionEvent);
+                synchronized (this.gameController) {
+                    switch (gameController.touchProcess(motionEvent)) {
+                        case GameController.PAUSE:
+
+                        case GameController.NOT_PAUSE:
+                    }
+                }
             return true;
         });
     }

@@ -2,10 +2,8 @@ package com.example.firstgame.object;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 
-import com.example.firstgame.main.GameView;
+import com.example.firstgame.view.GameView;
 
 public class Background extends GameObject{
     private GameView gameView;

@@ -3,7 +3,7 @@
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import com.example.firstgame.main.GameView;
+import com.example.firstgame.view.GameView;
 
 import java.util.Random;
 

@@ -2,9 +2,8 @@ package com.example.firstgame.score;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 
-import com.example.firstgame.main.GameView;
+import com.example.firstgame.view.GameView;
 
 public class Score {
     private int score;

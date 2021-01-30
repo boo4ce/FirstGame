@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.firstgame.main.GameView;
+import com.example.firstgame.view.GameView;
+import com.example.firstgame.view.PauseView;
 
 public class MainActivity extends Activity {
     @Override
@@ -16,6 +17,5 @@ public class MainActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         this.setContentView(new GameView(this));
-
     }
 }
