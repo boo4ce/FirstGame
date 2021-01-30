@@ -14,8 +14,8 @@ import java.util.Vector;
 public class GameController {
     //level
     public static final int EASY = 200;
-    public static final int NORMAL = 160;
-    public static final int HARD = 120;
+    public static final int NORMAL = 150;
+    public static final int HARD = 100;
 
     //pause
     public static final int PAUSE = 1;

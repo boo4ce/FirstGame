@@ -90,7 +90,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         Ball ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
         Threat basicThreat = new Threat(GameView.this, ball, bitmaps[13], ObjectSize.ROAD_WIDTH,
-                ObjectSize.HOLD_HEIGHT, 300, 80);
+                ObjectSize.HOLD_HEIGHT);
         Score score = new Score(GameView.this, bitmaps[10],
                 subArray(bitmaps, 0, 9), 250, 300);
 
@@ -98,7 +98,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
                 new Vector<>(), score);
 
-        gameController.setLevel(GameController.HARD);
+        gameController.setLevel(GameController.EASY);
+//        basicThreat.setHoldWidth(gameController.getLevel()*2);
     }
 
     int a = 1;

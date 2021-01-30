@@ -1,4 +1,4 @@
-  package com.example.firstgame.object;
+package com.example.firstgame.object;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -26,6 +26,8 @@ public class Ball extends GameObject implements CommonFunction{
 
     private GameView gameView;
 
+    private final int x_min, x_max;
+
     public Ball(GameView gameView, Bitmap image, int width, int height) {
         super(image, width, height);
 
@@ -34,12 +36,17 @@ public class Ball extends GameObject implements CommonFunction{
         rolling = new Bitmap[row][col];
         getRolling(col, row);
 
-        this.x = (gameView.getWidth() - width) / 2;
-        this.y = gameView.getHeight()/128*100;
+        move_per_time = gameView.getWidth()/135;
+
+        x_min = move_per_time*2;
+        x_max = gameView.getWidth() - x_min - width;
+
+        int tmp = Math.abs(new Random().nextInt() % 31);
+        this.x = ((x_max/30*tmp)/x_min)*x_min;
+
+        this.y = gameView.getHeight()/150*125;
 
         this.way = (new Random().nextBoolean())?Ball.TO_LEFT:Ball.TO_RIGHT;
-
-        move_per_time = gameView.getWidth()/108;
     }
 
     // get each state of ball
@@ -52,7 +59,7 @@ public class Ball extends GameObject implements CommonFunction{
     public void update() {
         if(this.way == Ball.TO_LEFT) x -= move_per_time;
         else x += move_per_time;
-        if(x <= 40 || x >= gameView.getWidth() - 40 - this.width)
+        if(x <= x_min || x >= x_max)
             this.way = 1 - this.way;
 
         current_col++;
@@ -79,7 +86,8 @@ public class Ball extends GameObject implements CommonFunction{
     public int getPerimeter() { return this.width/2; }
 
     public void reset() {
-        this.x = (gameView.getWidth() - width) / 2;
+        int tmp = Math.abs(new Random().nextInt() % 16);
+        this.x = ((x_max/15*tmp)/x_min)*x_min;
 
         this.way = (new Random().nextBoolean())?Ball.TO_LEFT:Ball.TO_RIGHT;
 
