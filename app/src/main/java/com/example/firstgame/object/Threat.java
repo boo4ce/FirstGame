@@ -3,6 +3,7 @@ package com.example.firstgame.object;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.example.firstgame.attributes.Level;
 import com.example.firstgame.view.GameView;
 
 import java.util.Random;
@@ -34,13 +35,15 @@ public class Threat extends GameObject implements CommonFunction {
 
         hori_move = ball.getMove_per_time()*2;
 
-        this.verti_move = gameView.getHeight()/150;
-        this.speedUp_line_y = ball.getY() - verti_move*33 - height;
-        this.verti_move_boost = verti_move*3/2;
+        int relative_y = ball.getY() - height;
+        this.verti_move = relative_y/Level.getLevel();
+        this.y = -(height/verti_move + 1)*verti_move + relative_y%verti_move;
+
+        this.speedUp_line_y = relative_y - verti_move*30;
+        this.verti_move_boost = verti_move*2;
 
         this.x = 0;
-        this.y = -height;
-        this.hold_width = hori_move*25;
+        this.hold_width = hori_move*25 - (300 - Level.getLevel())/5;
 
         // 1080 - 300 = 780
         x_max = gameView.getWidth() - hold_width;

@@ -7,16 +7,11 @@ import com.example.firstgame.thread.MainThread;
 import com.example.firstgame.object.Ball;
 import com.example.firstgame.object.RespawnTime;
 import com.example.firstgame.object.Threat;
-import com.example.firstgame.score.Score;
+import com.example.firstgame.attributes.Score;
 
 import java.util.Vector;
 
 public class GameController {
-    //level
-    public static final int EASY = 200;
-    public static final int NORMAL = 150;
-    public static final int HARD = 100;
-
     //pause
     public static final int PAUSE = 1;
     public static final int NOT_PAUSE = 0;
@@ -37,8 +32,6 @@ public class GameController {
 
     // thread
     private MainThread mainThread;
-
-    private int level;
 
     public GameController(GameView gameView, RespawnTime respawnTime, Ball ball, Threat basicThreat,
                           Vector<Threat> threats, Score score) {
@@ -153,14 +146,6 @@ public class GameController {
 
     public void gamePause() {
         pause = true;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public boolean isPause() {

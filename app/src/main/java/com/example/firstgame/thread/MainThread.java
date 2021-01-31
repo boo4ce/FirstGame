@@ -6,6 +6,7 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
 import com.example.firstgame.object.RespawnTime;
 import com.example.firstgame.view.GameView;
@@ -53,7 +54,7 @@ public class MainThread extends Thread {
                     this.updateCanvas();
 
                     this.count_frm.increase();
-                    if(count_frm.getCount() == gameController.getLevel()) {
+                    if(count_frm.getCount() == Level.getLevel()) {
                         gameController.threatController();
                         count_frm.reset();
                     }

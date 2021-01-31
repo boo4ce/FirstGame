@@ -5,28 +5,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewOverlay;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
+import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
 import com.example.firstgame.menu.PauseDrawable;
 import com.example.firstgame.object.Ball;
 import com.example.firstgame.object.RespawnTime;
 import com.example.firstgame.object.ObjectSize;
 import com.example.firstgame.object.Threat;
-import com.example.firstgame.score.Score;
+import com.example.firstgame.attributes.Score;
 
 import java.io.InputStream;
 import java.util.Vector;
@@ -73,6 +66,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void initGame() {
+        Level.setLevel(Level.FAST);
+
         int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
                 R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
                 R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.vn_ball, //8, 9, 10, 11
@@ -98,7 +93,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
                 new Vector<>(), score);
 
-        gameController.setLevel(GameController.EASY);
 //        basicThreat.setHoldWidth(gameController.getLevel()*2);
     }
 

@@ -1,4 +1,4 @@
-package com.example.firstgame.score;
+package com.example.firstgame.attributes;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
