@@ -43,13 +43,13 @@ public class Threat extends GameObject implements CommonFunction {
         this.verti_move_boost = verti_move*2;
 
         this.x = 0;
-        this.hold_width = hori_move*25 - (300 - Level.getLevel())/5;
+        this.hold_width = hori_move*20 - (300 - Level.getLevel())/5;
 
         // 1080 - 300 = 780
         x_max = gameView.getWidth() - hold_width;
 
         int tmp = Math.abs(new Random().nextInt() % 31);
-        this.x_hold = ((x_max/30*tmp)/hori_move)*hori_move;
+        this.x_hold = ((x_max/30*tmp)/hori_move)*(hori_move/2);
 
         this.direct = (new Random()).nextBoolean();
 
@@ -121,38 +121,42 @@ public class Threat extends GameObject implements CommonFunction {
     }
 
     public int checkCollision_and_getScore() {
-        if(this.isEffected() || this.getY() < ball.getY() - this.height) return Threat.NO_COLLISION;
+        if(this.isEffected() || this.y < ball.y - this.height) return Threat.NO_COLLISION;
         int hold_center_x = x_hold + hold_width/2, hold_center_y = this.y + height/2;
 
-        // 240 = this.height + ball.height
-        if(this.y <= ball.getY() + 240) {
-            if (x_hold > ball.getCenter_x() || x_hold + this.hold_width < ball.getCenter_x())
-                return Threat.COLLISION;
+        if(this.y <= ball.y + 240) {
+            if(this.y < ball.y || this.y > ball.getCenter_y()) {
+                if (x_hold > ball.getCenter_x() || x_hold + this.hold_width < ball.getCenter_x())
+                    return Threat.COLLISION;
 
-            double a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
-                    hold_center_x, hold_center_y, x_hold + hold_width, this.y);
-            if (a < ball.getPerimeter()) {
-                return Threat.COLLISION;
+                double a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                        hold_center_x, hold_center_y, x_hold + hold_width, this.y);
+                if (a < ball.getPerimeter()) {
+                    return Threat.COLLISION;
+                }
+
+                a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                        hold_center_x, hold_center_y, x_hold, this.y);
+                if (a < ball.getPerimeter()) {
+                    return Threat.COLLISION;
+                }
+
+                a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                        hold_center_x, hold_center_y, x_hold, this.y + height);
+                if (a < ball.getPerimeter()) {
+                    return Threat.COLLISION;
+                }
+
+                a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
+                        hold_center_x, hold_center_y, x_hold + hold_width, this.y + height);
+                if (a < ball.getPerimeter()) {
+                    return Threat.COLLISION;
+                }
             }
-
-            a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
-                    hold_center_x, hold_center_y, x_hold, this.y);
-            if (a < ball.getPerimeter()) {
-                return Threat.COLLISION;
+            else {
+                if(this.x_hold > ball.x || this.x_hold + this.hold_width < ball.x + ball.width)
+                    return Threat.COLLISION;
             }
-
-            a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
-                    hold_center_x, hold_center_y, x_hold, this.y + height);
-            if (a < ball.getPerimeter()) {
-                return Threat.COLLISION;
-            }
-
-            a = MyMath.lengthOfThirdEdge(ball.getCenter_x(), ball.getCenter_y(),
-                    hold_center_x, hold_center_y, x_hold + hold_width, this.y + height);
-            if (a < ball.getPerimeter()) {
-                return Threat.COLLISION;
-            }
-
             return Threat.IN_HOLD;
         }
 

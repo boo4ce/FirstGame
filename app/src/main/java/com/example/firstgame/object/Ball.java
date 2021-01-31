@@ -38,11 +38,13 @@ public class Ball extends GameObject implements CommonFunction{
 
         move_per_time = gameView.getWidth()/120;
 
-        x_min = move_per_time*2;
+        x_min = move_per_time*3;
         x_max = gameView.getWidth() - x_min - width;
 
-        int tmp = Math.abs(new Random().nextInt() % 30) + 1;
+        int tmp = Math.abs(new Random().nextInt() % 31);
         this.x = ((x_max/30*tmp)/x_min)*x_min;
+        this.x = Math.min(x_max - move_per_time, this.x);
+        this.x = Math.max(x_min + move_per_time, this.x);
 
         this.y = gameView.getHeight()*14/15 - height;
 
@@ -86,8 +88,10 @@ public class Ball extends GameObject implements CommonFunction{
     public int getPerimeter() { return this.width/2; }
 
     public void reset() {
-        int tmp = Math.abs(new Random().nextInt() % 30) + 1;
+        int tmp = Math.abs(new Random().nextInt() % 31);
         this.x = ((x_max/30*tmp)/x_min)*x_min;
+        this.x = Math.min(x_max - move_per_time, this.x);
+        this.x = Math.max(x_min + move_per_time, this.x);
 
         this.way = (new Random().nextBoolean())?Ball.TO_LEFT:Ball.TO_RIGHT;
 

@@ -29,15 +29,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
     private PauseDrawable drawable;
 
-    Bitmap[] bitmaps = new Bitmap[20];
+    Bitmap[] bitmaps = new Bitmap[50];
 
     public GameView(Context context) {
         super(context);
         this.setFocusable(true);
         getHolder().addCallback(this);
-
-//        pauseView = new PauseView(this.getContext());
-        drawable = new PauseDrawable();
     }
 
     @Override
@@ -49,8 +46,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             for(int i = 0; i < threats.size(); i++) {
                 threats.get(i).draw(canvas);
             }
-            gameController.getBall().draw(canvas);
             canvas.drawBitmap(bitmaps[14], this.getWidth() - 80, 0, null);
+            gameController.getBall().draw(canvas);
             if(gameController.isPause()) drawable.draw(canvas);
         }
     }
@@ -71,7 +68,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
                 R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
                 R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.vn_ball, //8, 9, 10, 11
-                R.drawable.setting_icon, R.drawable.threat, R.drawable.setting_icon}; //12, 13, 14
+                R.drawable.setting_icon, R.drawable.threat, R.drawable.setting_icon, R.drawable.vibration, //12, 13, 14, 15
+                R.drawable.speaker, R.drawable.mute, R.drawable.resume, R.drawable.restart,  // 16, 17, 18, 19
+                R.drawable.unvibration, R.drawable.quit}; //20, 21
+
         InputStream inputStream;
 
         for(int i = 0; i < list.length; i++) {
@@ -93,7 +93,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
                 new Vector<>(), score);
 
-//        basicThreat.setHoldWidth(gameController.getLevel()*2);
+        drawable = new PauseDrawable(this.getWidth(), this.getHeight(), bitmaps);
     }
 
     int a = 1;
