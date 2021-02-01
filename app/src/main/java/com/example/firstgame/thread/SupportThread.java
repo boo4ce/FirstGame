@@ -19,15 +19,8 @@ public class SupportThread extends Thread {
 
     @Override
     public void run() {
-        while(true) {
-            synchronized (this) {
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        while(gameController.isPause()) {
 
-            }
         }
     }
 }

@@ -97,19 +97,14 @@ public class GameController {
 
     public int touchProcess(MotionEvent motionEvent) {
         if(motionEvent.getX() >= gameView.getWidth() - 80 && motionEvent.getY() <= 80) {
-            if(pause == true) resume();
-            else pause = !pause;
-
+            pause = true;
             return GameController.PAUSE;
         }
         else {
-            if(running == false) restart();
-            else {
-                for(int i = 0; i < threats.size(); i++)
-                    if(threats.get(i).getHoldState()) {
-                        threats.get(i).stopHold(); break;
-                    }
-            }
+            for(int i = 0; i < threats.size(); i++)
+                if(threats.get(i).getHoldState()) {
+                    threats.get(i).stopHold(); break;
+                }
             return GameController.NOT_PAUSE;
         }
     }
@@ -150,5 +145,15 @@ public class GameController {
 
     public boolean isPause() {
         return pause;
+    }
+
+    public void notifyOnce() {
+        synchronized (this.mainThread) {
+            this.mainThread.notify();
+        }
+    }
+
+    public boolean isOver() {
+        return (running==false);
     }
 }

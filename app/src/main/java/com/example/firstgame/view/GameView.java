@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import com.example.firstgame.R;
 import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
+import com.example.firstgame.menu.GameOver;
 import com.example.firstgame.menu.PauseDrawable;
 import com.example.firstgame.object.Ball;
 import com.example.firstgame.object.RespawnTime;
@@ -27,7 +28,8 @@ import java.util.Vector;
 @SuppressLint("ResourceType")
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
-    private PauseDrawable drawable;
+    private PauseDrawable pauseDrawable;
+    private GameOver gameOver;
 
     Bitmap[] bitmaps = new Bitmap[50];
 
@@ -48,7 +50,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
             canvas.drawBitmap(bitmaps[14], this.getWidth() - 80, 0, null);
             gameController.getBall().draw(canvas);
-            if(gameController.isPause()) drawable.draw(canvas);
+            if(gameController.isPause()) pauseDrawable.draw(canvas);
+            if(gameController.isOver()) gameOver.draw(canvas);
         }
     }
 
@@ -93,10 +96,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
                 new Vector<>(), score);
 
-        drawable = new PauseDrawable(this.getWidth(), this.getHeight(), bitmaps);
+        pauseDrawable = new PauseDrawable(this.getWidth(), this.getHeight(), bitmaps);
+        gameOver = new GameOver(this.getWidth(), this.getHeight(), bitmaps);
     }
 
     int a = 1;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         new Thread(new Runnable() {
@@ -107,13 +112,42 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }).start();
 
-        this.setOnTouchListener((view, motionEvent) -> {
-            if(motionEvent.getAction() == MotionEvent.ACTION_DOWN)
-                synchronized (this.gameController) {
-                    switch (gameController.touchProcess(motionEvent)) {
-                        case GameController.PAUSE:
+        this.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+                synchronized (gameController) {
+                    if(gameController.isOver()) {
+                        switch (gameOver.touchEvent(event)) {
+                            case -1: break;
+                            case GameOver.QUIT:
+                                break;
+                            case GameOver.RESTART:
+                                gameController.restart();
+                                break;
+                        }
+                    }
+                    else if(gameController.isPause()) {
+                        switch (pauseDrawable.touchEvent(event)) {
+                            case -1: break;
+                            case PauseDrawable.SPEAKER:
+                                gameController.notifyOnce();
+                                break;
+                            case PauseDrawable.VIBRATION:
+                                gameController.notifyOnce();
+                                break;
+                            case PauseDrawable.QUIT:
+                                break;
+                            case PauseDrawable.RESTART:
+                                gameController.restart();
+                            case PauseDrawable.RESUME:
+                                gameController.resume();
+                        }
+                    }
+                    else{
+                        switch (gameController.touchProcess(event)) {
+                            case GameController.PAUSE:
 
-                        case GameController.NOT_PAUSE:
+                            case GameController.NOT_PAUSE:
+                        }
                     }
                 }
             return true;
