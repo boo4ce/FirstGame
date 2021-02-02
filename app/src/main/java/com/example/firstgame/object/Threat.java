@@ -28,9 +28,10 @@ public class  Threat extends GameObject implements CommonFunction {
     private final int hori_move, verti_move, verti_move_boost;
 
     public Threat(GameView gameView, Ball ball, Bitmap image, int width, int height) {
-        super(Bitmap.createScaledBitmap(image, image.getWidth(),
-                gameView.getRatio(image.getHeight()), false),
-                gameView.getRatio(width), gameView.getRatio(height));
+//        super(Bitmap.createScaledBitmap(image, image.getWidth(),
+//                gameView.getRatio(image.getHeight()), false),
+//                gameView.getRatio(width), gameView.getRatio(height));
+        super(image, width, height);
 
         this.gameView = gameView;
         this.ball = ball;
@@ -45,7 +46,7 @@ public class  Threat extends GameObject implements CommonFunction {
         this.verti_move_boost = verti_move*2;
 
         this.x = 0;
-        this.hold_width = ball.width;
+        this.hold_width = ball.width + hori_move*Level.getLevel()/12;
 
         // 1080 - 300 = 780
         x_max = gameView.getWidth() - hold_width;

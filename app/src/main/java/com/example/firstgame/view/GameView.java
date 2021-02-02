@@ -30,7 +30,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
     private PauseDrawable pauseDrawable;
     private GameOver gameOver;
-    private float ratio;
+    private float ratio = 1;
 
     Bitmap[] bitmaps = new Bitmap[50];
 
@@ -68,11 +68,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private void setRatio() {
         ratio = (float)(this.getHeight()*this.getWidth())/(1600*900);
+        ratio = (float) Math.sqrt(ratio);
         if(ratio <= 1) ratio = 1;
         else ratio = (float) (Math.floor(ratio) + 0.5);
     }
 
     private void initGame() {
+        this.setRatio();
         Level.setLevel(Level.FAST);
 
         int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3

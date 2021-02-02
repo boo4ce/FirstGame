@@ -29,9 +29,10 @@ public class Ball extends GameObject implements CommonFunction{
     private final int x_min, x_max;
 
     public Ball(GameView gameView, Bitmap image, int width, int height) {
-        super(Bitmap.createScaledBitmap(image, gameView.getRatio(image.getWidth()),
-                gameView.getRatio(image.getHeight()), false),
-                gameView.getRatio(width), gameView.getRatio(height));
+//        super(Bitmap.createScaledBitmap(image, gameView.getRatio(image.getWidth()),
+//                gameView.getRatio(image.getHeight()), false),
+//                gameView.getRatio(width), gameView.getRatio(height));
+        super(image, width, height);
 
         this.gameView = gameView;
 
