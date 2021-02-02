@@ -2,6 +2,7 @@ package com.example.firstgame.controller;
 
 import android.view.MotionEvent;
 
+import com.example.firstgame.thread.SupportThread;
 import com.example.firstgame.view.GameView;
 import com.example.firstgame.thread.MainThread;
 import com.example.firstgame.object.Ball;
@@ -32,6 +33,7 @@ public class GameController {
 
     // thread
     private MainThread mainThread;
+    private SupportThread supportThread;
 
     public GameController(GameView gameView, RespawnTime respawnTime, Ball ball, Threat basicThreat,
                           Vector<Threat> threats, Score score) {
@@ -42,12 +44,15 @@ public class GameController {
         this.basicThreat = basicThreat;
         this.respawnTime = respawnTime;
 
-        this.mainThread = new MainThread(gameView, this, respawnTime);
+        this.supportThread = new SupportThread(this, respawnTime);
+        this.mainThread = new MainThread(this.gameView,  this, supportThread);
 
     }
 
     public void runGame() {
         mainThread.start();
+        supportThread.start();
+
     }
 
     public void update() {

@@ -14,14 +14,16 @@ import com.example.firstgame.view.GameView;
 public class MainThread extends Thread {
     private SurfaceHolder surfaceHolder;
     private GameController gameController;
-    private RespawnTime count_frm;
     private GameView gameView;
+    private SupportThread supportThread;
+    private boolean running = true;
 
-    public MainThread(GameView gameView, GameController gameController, RespawnTime count_frm) {
+    public MainThread(GameView gameView, GameController gameController,
+                      SupportThread supportThread) {
         this.gameController = gameController;
         this.surfaceHolder = gameView.getHolder();
-        this.count_frm = count_frm;
         this.gameView = gameView;
+        this.supportThread = supportThread;
     }
 
     private void updateCanvas() {
@@ -44,21 +46,11 @@ public class MainThread extends Thread {
 
     @Override
     public void run() {
-        while(true) {
+        while(running) {
             if(gameController.isRunning()) {
-                if(gameController.checkCollision()) {
-                    gameController.setGameOver();
-                }
-                else {
-                    gameController.update();
-                    this.updateCanvas();
-
-                    this.count_frm.increase();
-                    if(count_frm.getCount() == Level.getLevel()) {
-                        gameController.threatController();
-                        count_frm.reset();
-                    }
-                }
+                gameController.update();
+                this.updateCanvas();
+                this.supportThread.wakeup();
             }
             else {
                 this.updateCanvas();
@@ -69,7 +61,9 @@ public class MainThread extends Thread {
                         e.printStackTrace();
                     }
                 }
+                this.supportThread.wakeup();
             }
+
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -77,6 +71,10 @@ public class MainThread extends Thread {
             }
         }
 
+    }
+
+    public final void kill() {
+        running = false;
     }
 
 }

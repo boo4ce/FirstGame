@@ -24,8 +24,8 @@ public class GameOver extends Drawable {
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-        rectScore = new RectF(screenWidth/10, screenHeight/3 - 160,
-                screenWidth*9/10, screenHeight/3 + 320);
+        rectScore = new RectF(screenWidth/10, screenHeight/5,
+                screenWidth*9/10, screenHeight/5 + screenHeight*2/5);
 
         rectQuit = new RectF(screenWidth/3 - 120, rectScore.bottom + 100,
                 screenWidth/3 + 120, rectScore.bottom + 340);

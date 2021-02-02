@@ -31,7 +31,7 @@ public class Score {
         this.gameView = gameView;
 
         score_x = (gameView.getWidth() - scoreB.getWidth())/2;
-        score_y = gameView.getHeight()/2 - height;
+        score_y = Math.max(gameView.getHeight()/2 - height*5/4, 150);
 
         // 1080 - (1080 - num_digits*width)/2 - 250
         this.last_posi = gameView.getWidth()/2 - width + num_digits*width/2;

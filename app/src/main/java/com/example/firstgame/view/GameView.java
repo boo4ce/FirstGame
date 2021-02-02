@@ -30,6 +30,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
     private PauseDrawable pauseDrawable;
     private GameOver gameOver;
+    private float ratio;
 
     Bitmap[] bitmaps = new Bitmap[50];
 
@@ -65,6 +66,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return subArr;
     }
 
+    private void setRatio() {
+        ratio = (float)(this.getHeight()*this.getWidth())/(1600*900);
+        if(ratio <= 1) ratio = 1;
+        else ratio = (float) (Math.floor(ratio) + 0.5);
+    }
+
     private void initGame() {
         Level.setLevel(Level.FAST);
 
@@ -80,7 +87,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for(int i = 0; i < list.length; i++) {
             inputStream = getResources().openRawResource(list[i]);
             bitmaps[i] = BitmapFactory.decodeStream(inputStream);
-
         }
 
         bitmaps[14] = Bitmap.createScaledBitmap(bitmaps[14], bitmaps[14].getWidth()/2,
@@ -119,6 +125,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         switch (gameOver.touchEvent(event)) {
                             case -1: break;
                             case GameOver.QUIT:
+
                                 break;
                             case GameOver.RESTART:
                                 gameController.restart();
@@ -162,5 +169,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
 
+    }
+
+    public int getRatio(int a) {
+        return (int)(a*ratio);
     }
 }
