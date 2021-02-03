@@ -30,7 +30,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
     private PauseDrawable pauseDrawable;
     private GameOver gameOver;
-    private float ratio = 1;
+    private static float ratio = 1;
 
     Bitmap[] bitmaps = new Bitmap[50];
 
@@ -51,8 +51,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
             canvas.drawBitmap(bitmaps[14], this.getWidth() - 80, 0, null);
             gameController.getBall().draw(canvas);
+            if(gameController.isOver()) {
+                gameOver.draw(canvas);
+                gameController.getScore().draw(canvas);
+            }
             if(gameController.isPause()) pauseDrawable.draw(canvas);
-            if(gameController.isOver()) gameOver.draw(canvas);
         }
     }
 
@@ -69,8 +72,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void setRatio() {
         ratio = (float)(this.getHeight()*this.getWidth())/(1600*900);
         ratio = (float) Math.sqrt(ratio);
-        if(ratio <= 1) ratio = 1;
-        else ratio = (float) (Math.floor(ratio) + 0.5);
+        ratio = Math.round(ratio*10)/10;
     }
 
     private void initGame() {
@@ -95,7 +97,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 bitmaps[14].getHeight()/2, false);
 
         Ball ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
-        Threat basicThreat = new Threat(GameView.this, ball, bitmaps[13], ObjectSize.ROAD_WIDTH,
+        Threat basicThreat = new Threat(GameView.this, ball, bitmaps[13], this.getWidth(),
                 ObjectSize.HOLD_HEIGHT);
         Score score = new Score(GameView.this, bitmaps[10],
                 subArray(bitmaps, 0, 9), 250, 300);
@@ -173,7 +175,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    public int getRatio(int a) {
+    public static int getRatio(int a) {
         return (int)(a*ratio);
     }
 }

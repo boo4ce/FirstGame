@@ -29,17 +29,17 @@ public class Ball extends GameObject implements CommonFunction{
     private final int x_min, x_max;
 
     public Ball(GameView gameView, Bitmap image, int width, int height) {
-//        super(Bitmap.createScaledBitmap(image, gameView.getRatio(image.getWidth()),
-//                gameView.getRatio(image.getHeight()), false),
-//                gameView.getRatio(width), gameView.getRatio(height));
-        super(image, width, height);
+        super(Bitmap.createScaledBitmap(image, gameView.getRatio(image.getWidth()),
+                GameView.getRatio(image.getHeight()), false),
+                GameView.getRatio(width), GameView.getRatio(height));
+//        super(image, width, height);
 
         this.gameView = gameView;
 
         rolling = new Bitmap[row][col];
         getRolling(col, row);
 
-        move_per_time = gameView.getWidth()/120;
+        move_per_time = (gameView.getWidth() - this.width)/100;
 
         x_min = move_per_time*3;
         x_max = gameView.getWidth() - x_min - width;

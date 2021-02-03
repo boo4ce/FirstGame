@@ -2,7 +2,6 @@ package com.example.firstgame.menu;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -12,26 +11,23 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.firstgame.view.GameView;
+
 public class GameOver extends Drawable {
     public static final int QUIT = 2;
     public static final int RESTART = 3;
 
-    private final RectF rectQuit, rectRestart, rectScore;
-    private Paint paint = new Paint();
+    private final RectF rectQuit, rectRestart;
     private Bitmap[] bitmaps;
 
     public GameOver(int screenWidth, int screenHeight, Bitmap[] bitmaps) {
-        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        int size = screenWidth/4;
 
-        rectScore = new RectF(screenWidth/10, screenHeight/5,
-                screenWidth*9/10, screenHeight/5 + screenHeight*2/5);
+        rectQuit = new RectF(screenWidth/3 - size/2, screenHeight - size*2,
+                screenWidth/3 + size/2, screenHeight - size);
 
-        rectQuit = new RectF(screenWidth/3 - 120, rectScore.bottom + 100,
-                screenWidth/3 + 120, rectScore.bottom + 340);
-
-        rectRestart = new RectF(screenWidth*2/3 - 120, rectQuit.top,
-                screenWidth*2/3 + 120, rectQuit.bottom);
+        rectRestart = new RectF(screenWidth*2/3 - size/2, rectQuit.top,
+                screenWidth*2/3 + size/2, rectQuit.bottom);
 
         this.bitmaps = bitmaps;
     }
@@ -54,7 +50,6 @@ public class GameOver extends Drawable {
     @Override
     public void draw(@NonNull Canvas canvas) {
         canvas.drawARGB(200, 0, 0, 0);
-        canvas.drawRoundRect(rectScore, rectScore.width()/10, rectScore.height()/3, paint);
         canvas.drawBitmap(bitmaps[19], null, rectRestart, null);
         canvas.drawBitmap(bitmaps[21], null, rectQuit, null);
     }

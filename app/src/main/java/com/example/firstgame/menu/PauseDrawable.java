@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.firstgame.view.GameView;
+
 public class PauseDrawable extends Drawable {
     public static final int SPEAKER = 0;
     public static final int VIBRATION = 1;
@@ -22,35 +24,32 @@ public class PauseDrawable extends Drawable {
 
     private final RectF rectSpeaker, rectVibra;
     private final RectF rectQuit, rectRestart, rectResume;
-    private Paint paint = new Paint();
     private Bitmap[] bitmaps;
     private RectF[] rectFs;
     private int stt_speaker, stt_vibra;
 
     public PauseDrawable(int screenWidth, int screenHeight, Bitmap[] bitmaps) {
         int segmentWidth = screenWidth/6, segmentHeight = screenHeight/15;
-        paint.setStrokeWidth(2);
-        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.WHITE);
 
         stt_speaker = 16; //17
         stt_vibra = 15; //20
 
+        int size = screenWidth/4;
         rectSpeaker = new RectF(segmentWidth, segmentHeight*5,
-                segmentWidth + 240, segmentHeight*5 + 240);
+                segmentWidth + size, segmentHeight*5 + size);
 
-        rectVibra = new RectF(screenWidth - rectSpeaker.left - 240, rectSpeaker.top,
+        rectVibra = new RectF(screenWidth - rectSpeaker.left - size, rectSpeaker.top,
                 screenWidth - rectSpeaker.left, rectSpeaker.bottom);
 
+        size = screenWidth/6;
         rectQuit = new RectF(segmentWidth, rectSpeaker.bottom + segmentHeight*2,
-                segmentWidth + 160, rectSpeaker.bottom + segmentHeight*2 + 160);
+                segmentWidth + size, rectSpeaker.bottom + segmentHeight*2 + size);
 
-        rectResume = new RectF(screenWidth - segmentWidth - 160, rectQuit.top,
+        rectResume = new RectF(screenWidth - segmentWidth - size, rectQuit.top,
                 screenWidth - segmentWidth, rectQuit.bottom);
 
         float middle = (rectQuit.left + rectResume.left)/2;
-        rectRestart = new RectF(middle, rectQuit.top, middle+160, rectQuit.bottom);
+        rectRestart = new RectF(middle, rectQuit.top, middle+size, rectQuit.bottom);
 
         this.bitmaps = bitmaps;
         rectFs = new RectF[]{rectSpeaker, rectVibra, rectQuit, rectRestart, rectResume};
@@ -91,8 +90,6 @@ public class PauseDrawable extends Drawable {
         canvas.drawBitmap(bitmaps[18], null, rectResume, null);
         canvas.drawBitmap(bitmaps[19], null, rectRestart, null);
         canvas.drawBitmap(bitmaps[21], null, rectQuit, null);
-//        canvas.drawRoundRect(rectSpeaker,rectSpeaker.width()/10, rectSpeaker.height()/10, paint);
-//        canvas.drawRoundRect(rectVibra,rectVibra.width()/10, rectVibra.height()/10, paint);
     }
 
     @Override
