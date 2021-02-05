@@ -1,6 +1,7 @@
 package com.example.firstgame.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,9 +9,11 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.example.firstgame.MainActivity;
 import com.example.firstgame.R;
 import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
@@ -70,7 +73,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void setRatio() {
-        ratio = (float)(this.getHeight()*this.getWidth())/(1600*900);
+        ratio = ((float)this.getHeight()*this.getWidth())/((float)1600*900);
         ratio = (float) Math.sqrt(ratio);
         ratio = Math.round(ratio*10)/10;
     }
@@ -129,7 +132,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         switch (gameOver.touchEvent(event)) {
                             case -1: break;
                             case GameOver.QUIT:
-
+                                this.dispose();
                                 break;
                             case GameOver.RESTART:
                                 gameController.restart();
@@ -146,6 +149,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                                 gameController.notifyOnce();
                                 break;
                             case PauseDrawable.QUIT:
+                                this.dispose();
                                 break;
                             case PauseDrawable.RESTART:
                                 gameController.restart();
@@ -177,5 +181,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static int getRatio(int a) {
         return (int)(a*ratio);
+    }
+
+    private void dispose() {
+        ((Activity) GameView.this.getContext()).finish();
     }
 }

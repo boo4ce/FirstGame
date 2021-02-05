@@ -46,7 +46,7 @@ public class  Threat extends GameObject implements CommonFunction {
         this.verti_move_boost = verti_move*2;
 
         this.x = 0;
-        this.hold_width = ball.width + hori_move*Level.getLevel()/12;
+        this.hold_width = ball.width + hori_move*Level.getLevel()/15;
 
         // 1080 - 300 = 780
         x_max = gameView.getWidth() - hold_width;

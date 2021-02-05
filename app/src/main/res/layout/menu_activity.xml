@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/black_light">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/name"
+        android:layout_width="800px"
+        android:layout_height="400px"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/gamename" />
+
+    <Button
+        android:id="@+id/Continues"
+        style="@style/Box"
+        android:text="Continues" />
+
+    <Button
+        android:id="@+id/startGame"
+        style="@style/Box"
+        android:text="New Game" />
+    <Button
+        android:id="@+id/ball"
+        style="@style/Box"
+        android:text="Ball" />
+    <Button
+        android:id="@+id/setting"
+        style="@style/Box"
+        android:text="Setting" />
+    <Button
+        android:id="@+id/Quit"
+        style="@style/Box"
+        android:text="Quit" />
+</LinearLayout>
