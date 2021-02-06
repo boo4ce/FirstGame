@@ -7,7 +7,7 @@
         <item name="android:textSize">50px</item>
         <item name="strokeColor">@color/light_blue_600</item>
         <item name="strokeWidth">5dp</item>
-        <item name="android:fillAlpha">#00</item>
+        <item name="android:fillColor">@color/transparent</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_marginTop">30px</item>
     </style>

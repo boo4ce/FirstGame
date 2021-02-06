@@ -75,7 +75,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void setRatio() {
         ratio = ((float)this.getHeight()*this.getWidth())/((float)1600*900);
         ratio = (float) Math.sqrt(ratio);
-        ratio = Math.round(ratio*10)/10;
+        ratio = Math.round(ratio*10)/10F;
     }
 
     private void initGame() {

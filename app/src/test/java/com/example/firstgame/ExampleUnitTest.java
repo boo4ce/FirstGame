@@ -12,7 +12,9 @@ import java.io.InputStream;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        MainActivity m = new MainActivity();
-
+        float ratio = ((float)1500*700)/((float)1600*900);
+        ratio = (float) Math.sqrt(ratio);
+        ratio = Math.round(ratio*10)/10F;
+        System.out.println(ratio);
     }
 }

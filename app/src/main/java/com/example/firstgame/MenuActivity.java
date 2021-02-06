@@ -25,5 +25,12 @@ public class MenuActivity extends Activity {
                 startActivity(intent);
             }
         });
+        button = findViewById(R.id.quit);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MenuActivity.this.finish();
+            }
+        });
     }
 }
