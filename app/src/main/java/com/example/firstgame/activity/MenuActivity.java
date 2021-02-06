@@ -1,16 +1,16 @@
-package com.example.firstgame;
+package com.example.firstgame.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 
-import com.example.firstgame.attributes.Level;
+import com.example.firstgame.R;
 
 public class MenuActivity extends Activity {
     @SuppressLint("ResourceType")
@@ -39,5 +39,9 @@ public class MenuActivity extends Activity {
             }
         });
 
+        button = findViewById(R.id.continues);
+        button.setEnabled(false);
+
+        ImageView imageView = (ImageView) findViewById(R.id.name);
     }
 }

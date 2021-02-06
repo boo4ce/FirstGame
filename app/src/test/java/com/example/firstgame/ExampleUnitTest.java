@@ -1,5 +1,9 @@
 package com.example.firstgame;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.ImageView;
+
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -12,9 +16,6 @@ import java.io.InputStream;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        float ratio = ((float)1500*700)/((float)1600*900);
-        ratio = (float) Math.sqrt(ratio);
-        ratio = Math.round(ratio*10)/10F;
-        System.out.println(ratio);
+
     }
 }

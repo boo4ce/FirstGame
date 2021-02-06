@@ -1,4 +1,4 @@
-package com.example.firstgame;
+package com.example.firstgame.activity;
 
 import android.app.Activity;
 import android.os.Bundle;

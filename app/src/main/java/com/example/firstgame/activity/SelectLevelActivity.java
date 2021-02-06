@@ -1,10 +1,11 @@
-package com.example.firstgame;
+package com.example.firstgame.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.firstgame.R;
 import com.example.firstgame.attributes.Level;
 
 public class SelectLevelActivity extends Activity {
@@ -26,6 +27,13 @@ public class SelectLevelActivity extends Activity {
                 }
             });
         }
+        
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectLevelActivity.this.finish();
+            }
+        });
     }
 
     private void openNewActivity(int level) {

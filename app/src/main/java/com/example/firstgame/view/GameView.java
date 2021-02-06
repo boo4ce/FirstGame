@@ -9,13 +9,10 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.example.firstgame.MainActivity;
 import com.example.firstgame.R;
-import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
 import com.example.firstgame.menu.GameOver;
 import com.example.firstgame.menu.PauseDrawable;

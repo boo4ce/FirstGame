@@ -11,14 +11,15 @@
         android:theme="@style/Theme.FirstGame">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".SelectLevelActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.SelectLevelActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar.Fullscreen"/>
 
         <activity
-            android:name=".MenuActivity"
+            android:name=".activity.MenuActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
