@@ -80,7 +80,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private void initGame() {
         this.setRatio();
-        Level.setLevel(Level.FAST);
 
         int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
                 R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7

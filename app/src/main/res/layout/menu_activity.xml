@@ -26,14 +26,14 @@
             android:text="Continues" />
 
         <Button
-            android:id="@+id/ball"
-            style="@style/Box"
-            android:text="Ball" />
-
-        <Button
             android:id="@+id/startGame"
             style="@style/Box"
             android:text="New Game" />
+
+        <Button
+            android:id="@+id/ball"
+            style="@style/Box"
+            android:text="Ball" />
 
         <Button
             android:id="@+id/setting"

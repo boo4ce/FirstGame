@@ -9,10 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FirstGame">
+
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".SelectLevelActivity"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".MenuActivity"
