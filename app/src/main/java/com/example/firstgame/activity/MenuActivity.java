@@ -3,6 +3,7 @@ package com.example.firstgame.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.opengl.Matrix;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -40,8 +41,6 @@ public class MenuActivity extends Activity {
         });
 
         button = findViewById(R.id.continues);
-        button.setEnabled(false);
-
-        ImageView imageView = (ImageView) findViewById(R.id.name);
+        button.setAlpha(0.3F);
     }
 }
