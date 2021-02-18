@@ -3,13 +3,12 @@ package com.example.firstgame.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.opengl.Matrix;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.example.firstgame.R;
 
@@ -41,6 +40,22 @@ public class MenuActivity extends Activity {
         });
 
         button = findViewById(R.id.continues);
+        button.setClickable(false);
         button.setAlpha(0.3F);
+
+        button = findViewById(R.id.setting);
+        button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Button button1 = findViewById(R.id.setting);
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    button1.setAlpha(0.3F);
+                }
+                else if(event.getAction() == MotionEvent.ACTION_UP)
+                    button1.setAlpha(1);
+                return true;
+            }
+        });
     }
+
 }
