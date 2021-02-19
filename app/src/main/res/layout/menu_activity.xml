@@ -18,7 +18,7 @@
             android:layout_height="400px"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/gamename"/>
+            android:background="@drawable/gamename" />
 
         <Button
             android:id="@+id/continues"
