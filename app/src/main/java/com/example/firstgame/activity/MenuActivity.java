@@ -72,7 +72,7 @@ public class MenuActivity extends Activity {
             @Override
             public void run() {
                 ImageView game_name = findViewById(R.id.name);
-                InputStream inputStream = getResources().openRawResource(R.drawable.game_name/0);
+                InputStream inputStream = getResources().openRawResource(R.drawable.game_name_0);
             }
         }).start();
     }
