@@ -3,17 +3,22 @@ package com.example.firstgame.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
+
+import java.io.InputStream;
 
 public class MenuActivity extends Activity {
     @SuppressLint({"ResourceType", "ClickableViewAccessibility"})
@@ -61,7 +66,15 @@ public class MenuActivity extends Activity {
                 MenuActivity.this.finish();
             return true;
         });
+
         //set animation
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ImageView game_name = findViewById(R.id.name);
+                InputStream inputStream = getResources().openRawResource(R.drawable.game_name/0);
+            }
+        }).start();
     }
 
     @Override
@@ -85,5 +98,6 @@ public class MenuActivity extends Activity {
         else if(event.getAction() == MotionEvent.ACTION_UP)
             button.setAlpha(1);
     }
+
 
 }
