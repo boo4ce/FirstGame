@@ -66,15 +66,6 @@ public class MenuActivity extends Activity {
                 MenuActivity.this.finish();
             return true;
         });
-
-        //set animation
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ImageView game_name = findViewById(R.id.name);
-                InputStream inputStream = getResources().openRawResource(R.drawable.game_name_0);
-            }
-        }).start();
     }
 
     @Override
