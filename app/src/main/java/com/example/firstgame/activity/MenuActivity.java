@@ -3,9 +3,10 @@ package com.example.firstgame.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,13 +16,19 @@ import android.widget.ImageView;
 import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
-import com.example.firstgame.thread.TitleAnimationThread;
+import com.example.firstgame.thread.AnimationThread;
 
-public class MenuActivity extends Activity {
-    private Drawable[] drawables;
+import java.io.Serializable;
+
+public class MenuActivity extends Activity implements Runnable, Serializable {
+    public final static int ENABLE_TO_CLOSE = 132;
+
     private ImageView game_name;
-    private TitleAnimationThread titleAnimationThread;
+    private AnimationThread animationThread;
+    private int[] list;
+    private Handler mHandler;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint({"ResourceType", "ClickableViewAccessibility"})
     @Override
     protected void onCreate(Bundle saveInstanceState) {
@@ -32,6 +39,7 @@ public class MenuActivity extends Activity {
 
         this.setContentView(R.layout.menu_activity);
         game_name = findViewById(R.id.name);
+        mHandler = new Handler(Looper.getMainLooper());
 
         final Button[] button = {findViewById(R.id.continues), findViewById(R.id.startGame),
                 findViewById(R.id.ball), findViewById(R.id.setting), findViewById(R.id.quit)};
@@ -43,8 +51,8 @@ public class MenuActivity extends Activity {
         button[1].setOnTouchListener((v, event) -> {
             setProcess(button[1], event);
             if(event.getAction() == MotionEvent.ACTION_UP) {
-                Intent intent = new Intent(getApplicationContext(), SelectLevelActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(MenuActivity.this, SelectLevelActivity.class);
+                startActivityForResult(intent, ENABLE_TO_CLOSE);
             }
             return true;
         });
@@ -65,19 +73,15 @@ public class MenuActivity extends Activity {
         button[4].setOnTouchListener((v, event) -> {
             setProcess(button[4], event);
             if(event.getAction() == MotionEvent.ACTION_UP)
-                MenuActivity.this.finish();
+                MenuActivity.this.finishAndRemoveTask();
             return true;
         });
 
-        drawables = new Drawable[40];
         //set animation
         new Thread(new Runnable() {
-            @SuppressLint("UseCompatLoadingForDrawables")
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void run() {
-                ImageView game_name = findViewById(R.id.name);
-                int list[] = {R.drawable.game_name_0, R.drawable.game_name_10, R.drawable.game_name_20,
+                list = new int[]{R.drawable.game_name_0, R.drawable.game_name_10, R.drawable.game_name_20,
                         R.drawable.game_name_30, R.drawable.game_name_40, R.drawable.game_name_50,
                         R.drawable.game_name_60, R.drawable.game_name_70, R.drawable.game_name_80,
                         R.drawable.game_name_90, R.drawable.game_name_100, R.drawable.game_name_110,
@@ -88,38 +92,21 @@ public class MenuActivity extends Activity {
                         R.drawable.game_name_330, R.drawable.game_name_340, R.drawable.game_name_350,
                         R.drawable.game_name_360};
 
-                for(int i = 0; i < list.length; i++) {
-                    drawables[i] = getResources().getDrawable(list[i], null);
-                }
-                titleAnimationThread = new TitleAnimationThread(MenuActivity.this);
-                titleAnimationThread.start();
+                animationThread = new AnimationThread(MenuActivity.this);
             }
         }).start();
+
     }
 
     public void updateFrame(int frame_index) {
-//        game_name.setBackground(drawables[frame_index]);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        System.out.println("Pause");
+        this.frame_index = frame_index;
+        mHandler.post(this::run);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        titleAnimationThread.reset();
-        titleAnimationThread.start();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.finishAndRemoveTask();
-        System.out.println("Destroy");
+        this.animationThread.start();
     }
 
     private void setProcess(Button button, MotionEvent event) {
@@ -128,9 +115,22 @@ public class MenuActivity extends Activity {
         }
         else if(event.getAction() == MotionEvent.ACTION_UP) {
             button.setAlpha(1);
-            titleAnimationThread.kill();
+            animationThread.kill();
         }
     }
 
+    private int frame_index;
+    @Override
+    public void run() {
+        game_name.setBackgroundResource(list[frame_index]);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent dataIntent) {
+        switch(requestCode) {
+            case ENABLE_TO_CLOSE:
+                if(resultCode == RESULT_CANCELED) this.finish();
+        }
+    }
 }

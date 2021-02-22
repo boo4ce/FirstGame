@@ -6,11 +6,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
 import com.example.firstgame.controller.GameController;
@@ -109,7 +111,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameOver = new GameOver(this.getWidth(), this.getHeight(), bitmaps);
     }
 
-    int a = 1;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
@@ -128,7 +129,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         switch (gameOver.touchEvent(event)) {
                             case -1: break;
                             case GameOver.QUIT:
-                                this.dispose();
+                                ((Activity) GameView.this.getContext()).finish();
                                 break;
                             case GameOver.RESTART:
                                 gameController.restart();
@@ -145,7 +146,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                                 gameController.notifyOnce();
                                 break;
                             case PauseDrawable.QUIT:
-                                this.dispose();
+                                ((Activity) GameView.this.getContext()).finish();
                                 break;
                             case PauseDrawable.RESTART:
                                 gameController.restart();
@@ -179,7 +180,5 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return (int)(a*ratio);
     }
 
-    private void dispose() {
-        ((Activity) GameView.this.getContext()).finish();
-    }
+
 }
