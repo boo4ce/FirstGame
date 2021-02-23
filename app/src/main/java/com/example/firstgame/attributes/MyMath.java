@@ -1,4 +1,4 @@
-package com.example.firstgame.object;
+package com.example.firstgame.attributes;
 
 public class MyMath {
     // distance of two point

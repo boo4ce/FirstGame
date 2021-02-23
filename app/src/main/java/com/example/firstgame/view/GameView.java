@@ -10,18 +10,20 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
+import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
-import com.example.firstgame.menu.GameOver;
-import com.example.firstgame.menu.PauseDrawable;
-import com.example.firstgame.object.Ball;
-import com.example.firstgame.object.RespawnTime;
-import com.example.firstgame.object.ObjectSize;
-import com.example.firstgame.object.Threat;
+import com.example.firstgame.custom_drawable.GameOver;
+import com.example.firstgame.custom_drawable.PauseDrawable;
+import com.example.firstgame.object_ingame.Ball;
+import com.example.firstgame.attributes.RespawnTime;
+import com.example.firstgame.attributes.ObjectSize;
+import com.example.firstgame.object_ingame.Threat;
 import com.example.firstgame.attributes.Score;
 
 import java.io.InputStream;
@@ -32,6 +34,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
     private PauseDrawable pauseDrawable;
     private GameOver gameOver;
+
+    private String content = "";
+    private boolean _continue = false;
     private static float ratio = 1;
 
     Bitmap[] bitmaps = new Bitmap[50];
@@ -40,6 +45,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         this.setFocusable(true);
         getHolder().addCallback(this);
+    }
+
+    public GameView(Context context, String content) {
+        super(context);
+        this.setFocusable(true);
+        getHolder().addCallback(this);
+
+        this._continue = true;
+        this.content = content;
+        Level.setLevel(Integer.parseInt(content.substring(0, content.indexOf("\n"))));
     }
 
     @Override
@@ -106,11 +121,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         RespawnTime respawnTime = new RespawnTime(0);
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
                 new Vector<>(), score);
+        if(_continue) {
+            try {
+                gameController.setValues(content);
+            } catch (Exception ex) {
+                getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(GameView.this.getContext(), "Error: Can not continue game !!", Toast.LENGTH_SHORT).show();
+                        ((Activity) GameView.this.getContext()).finish();
+                    }
+                });
+            }
+        }
 
         pauseDrawable = new PauseDrawable(this.getWidth(), this.getHeight(), bitmaps);
         gameOver = new GameOver(this.getWidth(), this.getHeight(), bitmaps);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
@@ -129,7 +158,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         switch (gameOver.touchEvent(event)) {
                             case -1: break;
                             case GameOver.QUIT:
-                                ((Activity) GameView.this.getContext()).finish();
+                                this.dispose();
                                 break;
                             case GameOver.RESTART:
                                 gameController.restart();
@@ -146,7 +175,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                                 gameController.notifyOnce();
                                 break;
                             case PauseDrawable.QUIT:
-                                ((Activity) GameView.this.getContext()).finish();
+                                this.dispose_and_save();
                                 break;
                             case PauseDrawable.RESTART:
                                 gameController.restart();
@@ -180,5 +209,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return (int)(a*ratio);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void dispose() {
+        this.gameController.setFilesaveValues(0);
+        this.gameController.clear();
+        ((Activity) GameView.this.getContext()).finish();
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void dispose_and_save() {
+        this.gameController.setFilesaveValues(1);
+        this.gameController.clear();
+        ((Activity) GameView.this.getContext()).finish();
+    }
 }

@@ -93,4 +93,8 @@ public class Score {
         score = 0;
         lock = true;
     }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 }

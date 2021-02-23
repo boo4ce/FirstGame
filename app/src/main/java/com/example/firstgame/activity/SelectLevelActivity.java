@@ -28,7 +28,7 @@ public class SelectLevelActivity extends Activity {
                 setAnimClick(findViewById(selected_level[j]), event);
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     openNewActivity(level[j]);
-                    setResult(RESULT_CANCELED);
+                    setResult(RESULT_OK);
                     SelectLevelActivity.this.finish();
                 }
                 return true;
@@ -47,6 +47,7 @@ public class SelectLevelActivity extends Activity {
     private void openNewActivity(int level) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         Level.setLevel(level);
+        intent.putExtra("flag", MenuActivity.START_NEW_GAME);
 //        intent.putExtra("level", level);
         startActivity(intent);
     }

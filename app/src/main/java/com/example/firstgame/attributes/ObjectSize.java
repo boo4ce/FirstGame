@@ -1,4 +1,4 @@
-package com.example.firstgame.object;
+package com.example.firstgame.attributes;
 
 public class ObjectSize {
     public static final int BALL_WIDTH = 160;

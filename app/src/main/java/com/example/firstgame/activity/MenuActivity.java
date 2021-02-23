@@ -18,15 +18,21 @@ import androidx.annotation.RequiresApi;
 import com.example.firstgame.R;
 import com.example.firstgame.thread.AnimationThread;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class MenuActivity extends Activity implements Runnable, Serializable {
     public final static int ENABLE_TO_CLOSE = 132;
+    public final static int START_WITH_PREVIOUS_GAME = 20;
+    public final static int START_NEW_GAME = 19;
 
     private ImageView game_name;
     private AnimationThread animationThread;
     private int[] list;
     private Handler mHandler;
+
+    private File file;
+    private Button button;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint({"ResourceType", "ClickableViewAccessibility"})
@@ -41,15 +47,14 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
         game_name = findViewById(R.id.name);
         mHandler = new Handler(Looper.getMainLooper());
 
-        final Button[] button = {findViewById(R.id.continues), findViewById(R.id.startGame),
+        final Button[] buttons = {findViewById(R.id.continues), findViewById(R.id.startGame),
                 findViewById(R.id.ball), findViewById(R.id.setting), findViewById(R.id.quit)};
 
-        button[0].setClickable(false);
-        button[0].setAlpha(0.3F);
+        button = buttons[0];
 
         //set touch listener new game
-        button[1].setOnTouchListener((v, event) -> {
-            setProcess(button[1], event);
+        buttons[1].setOnTouchListener((v, event) -> {
+            setProcess(buttons[1], event);
             if(event.getAction() == MotionEvent.ACTION_UP) {
                 Intent intent = new Intent(MenuActivity.this, SelectLevelActivity.class);
                 startActivityForResult(intent, ENABLE_TO_CLOSE);
@@ -58,25 +63,35 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
         });
 
         // ball
-        button[2].setOnTouchListener((v, event) -> {
-            setProcess(button[2], event);
+        buttons[2].setOnTouchListener((v, event) -> {
+            setProcess(buttons[2], event);
             return true;
         });
 
         // setting
-        button[3].setOnTouchListener((v, event) -> {
-            setProcess(button[3], event);
+        buttons[3].setOnTouchListener((v, event) -> {
+            setProcess(buttons[3], event);
             return true;
         });
 
         // quit
-        button[4].setOnTouchListener((v, event) -> {
-            setProcess(button[4], event);
+        buttons[4].setOnTouchListener((v, event) -> {
+            setProcess(buttons[4], event);
             if(event.getAction() == MotionEvent.ACTION_UP)
                 MenuActivity.this.finishAndRemoveTask();
             return true;
         });
 
+        //continues
+        buttons[0].setOnTouchListener((v, event) -> {
+            setProcess(buttons[0], event);
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("flag", MenuActivity.START_WITH_PREVIOUS_GAME);
+                startActivity(intent);
+            }
+            return true;
+        });
         //set animation
         new Thread(new Runnable() {
             @Override
@@ -93,6 +108,7 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
                         R.drawable.game_name_360};
 
                 animationThread = new AnimationThread(MenuActivity.this);
+                file = new File(getFilesDir(), "filesave");
             }
         }).start();
 
@@ -106,7 +122,21 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
     @Override
     protected void onResume() {
         super.onResume();
+        if(!file.exists() || file.length() == 0) {
+            button.setEnabled(false);
+            button.setAlpha(0.3F);
+        }
+        else {
+            button.setEnabled(true);
+            button.setAlpha(1);
+        }
         this.animationThread.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        animationThread.kill();
     }
 
     private void setProcess(Button button, MotionEvent event) {
@@ -115,7 +145,6 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
         }
         else if(event.getAction() == MotionEvent.ACTION_UP) {
             button.setAlpha(1);
-            animationThread.kill();
         }
     }
 
@@ -131,6 +160,7 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
         switch(requestCode) {
             case ENABLE_TO_CLOSE:
                 if(resultCode == RESULT_CANCELED) this.finish();
+
         }
     }
 }

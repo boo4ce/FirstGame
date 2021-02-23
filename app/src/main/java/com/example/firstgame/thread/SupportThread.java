@@ -1,12 +1,8 @@
 package com.example.firstgame.thread;
 
-import android.graphics.Canvas;
-import android.view.SurfaceHolder;
-
 import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
-import com.example.firstgame.object.RespawnTime;
-import com.example.firstgame.view.GameView;
+import com.example.firstgame.attributes.RespawnTime;
 
 public class SupportThread extends Thread {
     private GameController gameController;

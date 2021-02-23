@@ -1,4 +1,4 @@
-package com.example.firstgame.object;
+package com.example.firstgame.object_ingame;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -107,5 +107,17 @@ public class Ball extends GameObject implements CommonFunction{
 
     public int getMove_per_time() {
         return move_per_time;
+    }
+
+    public String getStatus() {
+        return this.x + " " + this.way + " " + this.current_row + " " + this.current_col;
+    }
+
+    public void setStatus(String status) throws NumberFormatException {
+        String[] values = status.split(" ");
+        this.x = Integer.parseInt(values[0]);
+        this.way = Integer.parseInt(values[1]);
+        this.current_row = Integer.parseInt(values[2]);
+        this.current_col = Integer.parseInt(values[3]);
     }
 }

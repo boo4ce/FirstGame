@@ -1,21 +1,16 @@
 package com.example.firstgame.thread;
 
 import android.graphics.Canvas;
-import android.os.Build;
 import android.view.SurfaceHolder;
 
-import androidx.annotation.RequiresApi;
-
-import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
-import com.example.firstgame.object.RespawnTime;
 import com.example.firstgame.view.GameView;
 
 public class MainThread extends Thread {
-    private SurfaceHolder surfaceHolder;
-    private GameController gameController;
-    private GameView gameView;
-    private SupportThread supportThread;
+    private final SurfaceHolder surfaceHolder;
+    private final GameController gameController;
+    private final GameView gameView;
+    private final SupportThread supportThread;
     private boolean running = true;
 
     public MainThread(GameView gameView, GameController gameController,

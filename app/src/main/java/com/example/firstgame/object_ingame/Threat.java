@@ -1,9 +1,10 @@
-package com.example.firstgame.object;
+package com.example.firstgame.object_ingame;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import com.example.firstgame.attributes.Level;
+import com.example.firstgame.attributes.MyMath;
 import com.example.firstgame.view.GameView;
 
 import java.util.Random;
@@ -170,5 +171,18 @@ public class  Threat extends GameObject implements CommonFunction {
 
     public void setHoldWidth(int hold_width) {
         this.hold_width = hold_width;
+    }
+
+    public String getStatus() {
+        return this.x_hold + " " + this.y + " " + this.direct + " " + running + " " + effected;
+    }
+
+    public void setStatus(String status) throws NumberFormatException{
+        String[] values = status.split(" ");
+        this.x_hold = Integer.parseInt(values[0]);
+        this.y = Integer.parseInt(values[1]);
+        this.direct = Boolean.parseBoolean(values[2]);
+        this.running = Boolean.parseBoolean(values[3]);
+        this.effected = Boolean.parseBoolean(values[4]);
     }
 }
