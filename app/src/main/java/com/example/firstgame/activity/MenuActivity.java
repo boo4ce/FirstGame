@@ -88,8 +88,6 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
                 MenuActivity.this.finishAndRemoveTask();
             return true;
         });
-<<<<<<< HEAD
-=======
 
         //continues
         buttons[0].setOnTouchListener((v, event) -> {
@@ -127,7 +125,6 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
     public void updateFrame(int frame_index) {
         this.frame_index = frame_index;
         mHandler.post(this::run);
->>>>>>> fix/filesave
     }
 
     @Override
