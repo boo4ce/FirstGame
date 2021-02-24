@@ -1,17 +1,14 @@
-package com.example.firstgame.menu;
+package com.example.firstgame.custom_drawable;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
-import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.example.firstgame.view.GameView;
 
 public class GameOver extends Drawable {
     public static final int QUIT = 2;

@@ -1,4 +1,4 @@
-package com.example.firstgame.object;
+package com.example.firstgame.object_ingame;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

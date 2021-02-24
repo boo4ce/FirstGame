@@ -2,12 +2,13 @@ package com.example.firstgame.controller;
 
 import android.view.MotionEvent;
 
+import com.example.firstgame.attributes.Level;
 import com.example.firstgame.thread.SupportThread;
 import com.example.firstgame.view.GameView;
 import com.example.firstgame.thread.MainThread;
-import com.example.firstgame.object.Ball;
-import com.example.firstgame.object.RespawnTime;
-import com.example.firstgame.object.Threat;
+import com.example.firstgame.object_ingame.Ball;
+import com.example.firstgame.attributes.RespawnTime;
+import com.example.firstgame.object_ingame.Threat;
 import com.example.firstgame.attributes.Score;
 
 import java.util.Vector;
@@ -16,9 +17,11 @@ public class GameController {
     //pause
     public static final int PAUSE = 1;
     public static final int NOT_PAUSE = 0;
+    public static final int HAVE_FILESAVE = 2;
+    public static final int EMPTY_FILESAVE = 3;
 
     // game view
-    private GameView gameView;
+    private final GameView gameView;
 
     // game object
     private Ball ball;
@@ -32,8 +35,11 @@ public class GameController {
     private boolean pause = false;
 
     // thread
-    private MainThread mainThread;
-    private SupportThread supportThread;
+    private final MainThread mainThread;
+    private final SupportThread supportThread;
+
+    //
+    private String content = "";
 
     public GameController(GameView gameView, RespawnTime respawnTime, Ball ball, Threat basicThreat,
                           Vector<Threat> threats, Score score) {
@@ -102,7 +108,6 @@ public class GameController {
 
     public int touchProcess(MotionEvent motionEvent) {
         if(motionEvent.getX() >= gameView.getWidth() - 80 && motionEvent.getY() <= 80) {
-            pause = true;
             return GameController.PAUSE;
         }
         else {
@@ -152,6 +157,7 @@ public class GameController {
         return pause;
     }
 
+    // wake mainthread up to update setting
     public void notifyOnce() {
         synchronized (this.mainThread) {
             this.mainThread.notify();
@@ -160,5 +166,49 @@ public class GameController {
 
     public boolean isOver() {
         return (running==false);
+    }
+
+    public final void setFilesaveValues(int flag) {
+        if(flag == GameController.EMPTY_FILESAVE) {
+            content = "";
+        }
+        else {
+            content += Level.getLevel() + "\n";
+            content += this.ball.getStatus() + "\n";
+            content += this.respawnTime.getCount() + "\n";
+            content += this.score.getScore() + "\n";
+            content += this.threats.size() + "\n";
+            for(Threat threat : threats)
+                content += threat.getStatus() + "\n";
+        }
+    }
+
+
+    public final void setValues(String content) throws NumberFormatException{
+        String values[] = content.split("\n");
+        this.ball.setStatus(values[1]);
+        this.respawnTime.setCount(Integer.parseInt(values[2]));
+        this.score.setScore(Integer.parseInt(values[3]));
+        int threat_size = Integer.parseInt(values[4]);
+        for(int i = 0; i < threat_size; i++) {
+            Threat threat = basicThreat.clone();
+            threat.setStatus(values[5+i]);
+            threats.add(threat);
+        }
+    }
+
+    public final String filesave() {
+        return content;
+    }
+
+    public void clear() {
+        this.ball = null;
+        this.threats = null;
+        this.basicThreat = null;
+        this.score = null;
+        this.respawnTime = null;
+        this.mainThread.kill();
+        this.supportThread.kill();
+        System.gc();
     }
 }

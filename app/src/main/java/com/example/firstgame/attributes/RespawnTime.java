@@ -1,4 +1,4 @@
-package com.example.firstgame.object;
+package com.example.firstgame.attributes;
 
 public class RespawnTime {
     private int count;

@@ -1,4 +1,4 @@
-package com.example.firstgame.object;
+package com.example.firstgame.object_ingame;
 
 import android.graphics.Bitmap;
 
@@ -48,4 +48,5 @@ public abstract class GameObject {
     public int getY() {
         return y;
     }
+
 }

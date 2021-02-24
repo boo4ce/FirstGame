@@ -6,20 +6,25 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.os.Build;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
+import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
-import com.example.firstgame.menu.GameOver;
-import com.example.firstgame.menu.PauseDrawable;
-import com.example.firstgame.object.Ball;
-import com.example.firstgame.object.RespawnTime;
-import com.example.firstgame.object.ObjectSize;
-import com.example.firstgame.object.Threat;
+import com.example.firstgame.custom_drawable.GameOver;
+import com.example.firstgame.custom_drawable.PauseDrawable;
+import com.example.firstgame.object_ingame.Ball;
+import com.example.firstgame.attributes.RespawnTime;
+import com.example.firstgame.attributes.ObjectSize;
+import com.example.firstgame.object_ingame.Threat;
 import com.example.firstgame.attributes.Score;
 
 import java.io.InputStream;
@@ -30,6 +35,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameController gameController;
     private PauseDrawable pauseDrawable;
     private GameOver gameOver;
+
+    private String content = "";
+    private boolean _continue = false;
     private static float ratio = 1;
 
     Bitmap[] bitmaps = new Bitmap[50];
@@ -38,6 +46,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         this.setFocusable(true);
         getHolder().addCallback(this);
+    }
+
+    public void addContent(String content) {
+        this._continue = true;
+        this.content = content;
+        Level.setLevel(Integer.parseInt(content.substring(0, content.indexOf("\n"))));
     }
 
     @Override
@@ -104,12 +118,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         RespawnTime respawnTime = new RespawnTime(0);
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
                 new Vector<>(), score);
+        if(_continue) {
+            try {
+                gameController.setValues(content);
+            } catch (Exception ex) {
+                getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(GameView.this.getContext(), "Error: Can not continue game !!", Toast.LENGTH_SHORT).show();
+                        ((Activity) GameView.this.getContext()).finish();
+                    }
+                });
+            }
+        }
 
         pauseDrawable = new PauseDrawable(this.getWidth(), this.getHeight(), bitmaps);
         gameOver = new GameOver(this.getWidth(), this.getHeight(), bitmaps);
     }
 
-    int a = 1;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
@@ -118,51 +144,52 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             public void run() {
                 initGame();
                 gameController.runGame();
+
+                GameView.this.setOnTouchListener((v, event) -> {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN)
+                        synchronized (gameController) {
+                            if(gameController.isOver()) {
+                                switch (gameOver.touchEvent(event)) {
+                                    case -1: break;
+                                    case GameOver.QUIT:
+                                        dispose();
+                                        break;
+                                    case GameOver.RESTART:
+                                        gameController.restart();
+                                        break;
+                                }
+                            }
+                            else if(gameController.isPause()) {
+                                switch (pauseDrawable.touchEvent(event)) {
+                                    case -1: break;
+                                    case PauseDrawable.SPEAKER:
+                                        gameController.notifyOnce();
+                                        break;
+                                    case PauseDrawable.VIBRATION:
+                                        gameController.notifyOnce();
+                                        break;
+                                    case PauseDrawable.QUIT:
+                                        dispose_and_save();
+                                        break;
+                                    case PauseDrawable.RESTART:
+                                        gameController.restart();
+                                    case PauseDrawable.RESUME:
+                                        gameController.resume();
+                                }
+                            }
+                            else{
+                                switch (gameController.touchProcess(event)) {
+                                    case GameController.PAUSE:
+                                        pause();
+                                    case GameController.NOT_PAUSE:
+                                }
+                            }
+                        }
+                    return true;
+                });
             }
         }).start();
 
-        this.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-                synchronized (gameController) {
-                    if(gameController.isOver()) {
-                        switch (gameOver.touchEvent(event)) {
-                            case -1: break;
-                            case GameOver.QUIT:
-                                this.dispose();
-                                break;
-                            case GameOver.RESTART:
-                                gameController.restart();
-                                break;
-                        }
-                    }
-                    else if(gameController.isPause()) {
-                        switch (pauseDrawable.touchEvent(event)) {
-                            case -1: break;
-                            case PauseDrawable.SPEAKER:
-                                gameController.notifyOnce();
-                                break;
-                            case PauseDrawable.VIBRATION:
-                                gameController.notifyOnce();
-                                break;
-                            case PauseDrawable.QUIT:
-                                this.dispose();
-                                break;
-                            case PauseDrawable.RESTART:
-                                gameController.restart();
-                            case PauseDrawable.RESUME:
-                                gameController.resume();
-                        }
-                    }
-                    else{
-                        switch (gameController.touchProcess(event)) {
-                            case GameController.PAUSE:
-
-                            case GameController.NOT_PAUSE:
-                        }
-                    }
-                }
-            return true;
-        });
     }
 
     @Override
@@ -179,7 +206,31 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return (int)(a*ratio);
     }
 
+    //
     private void dispose() {
+        this.gameController.setFilesaveValues(GameController.EMPTY_FILESAVE);
+        this.gameController.clear();
         ((Activity) GameView.this.getContext()).finish();
+    }
+
+    private void dispose_and_save() {
+        this.gameController.setFilesaveValues(GameController.HAVE_FILESAVE);
+        this.gameController.clear();
+        ((Activity) GameView.this.getContext()).finish();
+    }
+
+    // return previous stt
+    public boolean pause() {
+        boolean stt = gameController.isPause();
+        if(stt) {
+            this.gameController.setFilesaveValues(GameController.HAVE_FILESAVE);
+            this.gameController.clear();
+        }
+        gameController.gamePause();
+        return stt;
+    }
+
+    public final String filesave() {
+        return gameController.filesave();
     }
 }
