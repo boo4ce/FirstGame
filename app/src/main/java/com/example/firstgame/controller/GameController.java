@@ -17,6 +17,8 @@ public class GameController {
     //pause
     public static final int PAUSE = 1;
     public static final int NOT_PAUSE = 0;
+    public static final int HAVE_FILESAVE = 2;
+    public static final int EMPTY_FILESAVE = 3;
 
     // game view
     private final GameView gameView;
@@ -37,7 +39,7 @@ public class GameController {
     private final SupportThread supportThread;
 
     //
-    private static String content = "";
+    private String content = "";
 
     public GameController(GameView gameView, RespawnTime respawnTime, Ball ball, Threat basicThreat,
                           Vector<Threat> threats, Score score) {
@@ -106,7 +108,6 @@ public class GameController {
 
     public int touchProcess(MotionEvent motionEvent) {
         if(motionEvent.getX() >= gameView.getWidth() - 80 && motionEvent.getY() <= 80) {
-            pause = true;
             return GameController.PAUSE;
         }
         else {
@@ -156,6 +157,7 @@ public class GameController {
         return pause;
     }
 
+    // wake mainthread up to update setting
     public void notifyOnce() {
         synchronized (this.mainThread) {
             this.mainThread.notify();
@@ -166,8 +168,8 @@ public class GameController {
         return (running==false);
     }
 
-    public void setFilesaveValues(int flag) {
-        if(flag == 0) {
+    public final void setFilesaveValues(int flag) {
+        if(flag == GameController.EMPTY_FILESAVE) {
             content = "";
         }
         else {
@@ -195,7 +197,7 @@ public class GameController {
         }
     }
 
-    public final static String filesave() {
+    public final String filesave() {
         return content;
     }
 

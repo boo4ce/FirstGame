@@ -2,8 +2,10 @@ package com.example.firstgame.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -15,16 +17,10 @@ import com.example.firstgame.controller.IOFile;
 import com.example.firstgame.view.GameView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilterInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 public class MainActivity extends Activity {
     private IOFile ioFile;
+    private GameView gameView;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -34,42 +30,65 @@ public class MainActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        ioFile = new IOFile(new File(getFilesDir(), "filesave"));
+        ioFile = new IOFile();
+        gameView = new GameView(this);
 
-//        Level.setLevel(getIntent().getIntExtra("level", -1));
         Intent intent = getIntent();
         if(intent.getIntExtra("flag", 0) == MenuActivity.START_WITH_PREVIOUS_GAME) {
             try {
-                this.setContentView(new GameView(this, ioFile.readData()));
+                gameView.addContent(ioFile.readData());
+                this.setContentView(this.gameView);
             } catch (Exception e) {
                 Toast.makeText(this, "Error: Can not continue game !!", Toast.LENGTH_SHORT).show();
                 this.finish();
             }
         } else {
-            this.setContentView(new GameView(this));
+            this.setContentView(this.gameView);
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void finish() {
-        if(GameController.filesave() == "") {
+        this.save();
+        super.finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
+        if(gameView.pause()) {
+            return super.onKeyDown(keyCode, keyEvent);
+        }
+
+        return false;
+    }
+
+    private void save() {
+        if(gameView.filesave().equals("")) {
             ioFile.delete();
         }
         else {
             try {
-                ioFile.writeData(GameController.filesave());
+                ioFile.writeData(gameView.filesave());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        super.finish();
     }
 
 }

@@ -3,19 +3,23 @@ package com.example.firstgame.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.MotionEvent;
+import android.view.SoundEffectConstants;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
+import com.example.firstgame.controller.IOFile;
 import com.example.firstgame.thread.AnimationThread;
 
 import java.io.File;
@@ -56,6 +60,9 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
         buttons[1].setOnTouchListener((v, event) -> {
             setProcess(buttons[1], event);
             if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(button.isEnabled()) {
+                    Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show();
+                }
                 Intent intent = new Intent(MenuActivity.this, SelectLevelActivity.class);
                 startActivityForResult(intent, ENABLE_TO_CLOSE);
             }
@@ -109,6 +116,7 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
 
                 animationThread = new AnimationThread(MenuActivity.this);
                 file = new File(getFilesDir(), "filesave");
+                IOFile.setFile(file);
             }
         }).start();
 
