@@ -39,7 +39,7 @@ public class SelectLevelActivity extends Activity {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_OK);
-                SelectLevelActivity.this.finish();
+                SelectLevelActivity.this.onBackPressed();
             }
         });
     }
@@ -50,6 +50,7 @@ public class SelectLevelActivity extends Activity {
         intent.putExtra("flag", MenuActivity.START_NEW_GAME);
 //        intent.putExtra("level", level);
         startActivity(intent);
+        overridePendingTransition(R.anim.appear, R.anim.nothing);
     }
 
     private void setAnimClick(Button button, MotionEvent event) {
@@ -59,5 +60,11 @@ public class SelectLevelActivity extends Activity {
         else if(event.getAction() == MotionEvent.ACTION_UP) {
             button.setAlpha(1);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

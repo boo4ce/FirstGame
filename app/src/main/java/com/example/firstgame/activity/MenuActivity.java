@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ import com.example.firstgame.thread.AnimationThread;
 import java.io.File;
 import java.io.Serializable;
 
-public class MenuActivity extends Activity implements Runnable, Serializable {
+public class MenuActivity extends Activity implements Runnable{
     public final static int ENABLE_TO_CLOSE = 132;
     public final static int START_WITH_PREVIOUS_GAME = 20;
     public final static int START_NEW_GAME = 19;
@@ -65,6 +66,7 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
                 }
                 Intent intent = new Intent(MenuActivity.this, SelectLevelActivity.class);
                 startActivityForResult(intent, ENABLE_TO_CLOSE);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
             return true;
         });
@@ -120,6 +122,7 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
             }
         }).start();
 
+        ImageView imageView = findViewById(list[0]);
     }
 
     public void updateFrame(int frame_index) {
@@ -162,12 +165,11 @@ public class MenuActivity extends Activity implements Runnable, Serializable {
         game_name.setBackgroundResource(list[frame_index]);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent dataIntent) {
         switch(requestCode) {
             case ENABLE_TO_CLOSE:
-                if(resultCode == RESULT_CANCELED) this.finish();
+//                if(resultCode == RESULT_CANCELED) this.finish();
 
         }
     }
