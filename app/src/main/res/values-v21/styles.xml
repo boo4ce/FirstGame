@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Box">
-        <item name="android:layout_width">800px</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">150px</item>
         <item name="android:textSize">50px</item>
         <item name="android:textColor">@color/white</item>
