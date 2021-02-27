@@ -1,48 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/black_light"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
-
-        <ImageView
-            android:id="@+id/name"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+        <LinearLayout
+            android:id="@+id/menu_layout"
             android:layout_width="800px"
-            android:layout_height="400px"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
 
-        <Button
-            android:id="@+id/continues"
-            style="@style/Box"
-            android:text="Continues" />
+            <ImageView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="400px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
+                tools:ignore="PxUsage" />
 
-        <Button
-            android:id="@+id/startGame"
-            style="@style/Box"
-            android:text="New Game" />
+            <Button
+                android:id="@+id/continues"
+                style="@style/Box"
+                android:text="Continues" />
 
-        <Button
-            android:id="@+id/ball"
-            style="@style/Box"
-            android:text="Ball" />
+            <Button
+                android:id="@+id/startGame"
+                style="@style/Box"
+                android:text="New Game" />
 
-        <Button
-            android:id="@+id/setting"
-            style="@style/Box"
-            android:text="Setting" />
+            <Button
+                android:id="@+id/ball"
+                style="@style/Box"
+                android:text="Ball" />
 
-        <Button
-            android:id="@+id/quit"
-            style="@style/Box"
-            android:text="Quit" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/setting"
+                style="@style/Box"
+                android:text="Setting" />
 
+            <Button
+                android:id="@+id/quit"
+                style="@style/Box"
+                android:text="Quit" />
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>

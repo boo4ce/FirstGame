@@ -11,6 +11,8 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.firstgame.attributes.SoundAndVibra;
+
 public class PauseDrawable extends Drawable {
     public static final int SPEAKER = 0;
     public static final int VIBRATION = 1;
@@ -22,13 +24,9 @@ public class PauseDrawable extends Drawable {
     private final RectF rectQuit, rectRestart, rectResume;
     private Bitmap[] bitmaps;
     private RectF[] rectFs;
-    private int stt_speaker, stt_vibra;
 
     public PauseDrawable(int screenWidth, int screenHeight, Bitmap[] bitmaps) {
         int segmentWidth = screenWidth/6, segmentHeight = screenHeight/15;
-
-        stt_speaker = 16; //17
-        stt_vibra = 15; //20
 
         int size = screenWidth/4;
         rectSpeaker = new RectF(segmentWidth, segmentHeight*5,
@@ -61,10 +59,10 @@ public class PauseDrawable extends Drawable {
             if(isClick(x, y, rectFs[i])) {
                 switch (i) {
                     case 0:
-                        stt_speaker = 33 - stt_speaker;
+                        SoundAndVibra.changeSoundState();
                         return PauseDrawable.SPEAKER;
                     case 1:
-                        stt_vibra = 35 - stt_vibra;
+                        SoundAndVibra.changeVibraState();
                         return PauseDrawable.VIBRATION;
                     case 2:
                         return PauseDrawable.QUIT;
@@ -81,8 +79,8 @@ public class PauseDrawable extends Drawable {
     @Override
     public void draw(@NonNull Canvas canvas) {
         canvas.drawARGB(200, 0, 0, 0);
-        canvas.drawBitmap(bitmaps[stt_speaker], null, rectSpeaker, null);
-        canvas.drawBitmap(bitmaps[stt_vibra], null, rectVibra, null);
+        canvas.drawBitmap(bitmaps[getSpeakerFrame()], null, rectSpeaker, null);
+        canvas.drawBitmap(bitmaps[getVibrationFrame()], null, rectVibra, null);
         canvas.drawBitmap(bitmaps[18], null, rectResume, null);
         canvas.drawBitmap(bitmaps[19], null, rectRestart, null);
         canvas.drawBitmap(bitmaps[21], null, rectQuit, null);
@@ -101,5 +99,15 @@ public class PauseDrawable extends Drawable {
     @Override
     public int getOpacity() {
         return PixelFormat.OPAQUE;
+    }
+
+    private int getSpeakerFrame() {
+        if(SoundAndVibra.getSound()) return 16;
+        return 17;
+    }
+
+    private int getVibrationFrame() {
+        if(SoundAndVibra.getVibra()) return 15;
+        return 20;
     }
 }
