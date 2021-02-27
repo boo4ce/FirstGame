@@ -8,18 +8,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Layout;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
+import com.example.firstgame.attributes.SoundAndVibra;
 import com.example.firstgame.controller.IOFile;
 import com.example.firstgame.thread.AnimationThread;
 
@@ -117,12 +121,11 @@ public class MenuActivity extends Activity implements Runnable{
                         R.drawable.game_name_360};
 
                 animationThread = new AnimationThread(MenuActivity.this);
+                MenuActivity.this.getSetting();
                 file = new File(getFilesDir(), "filesave");
                 IOFile.setFile(file);
             }
         }).start();
-
-        ImageView imageView = findViewById(list[0]);
     }
 
     public void updateFrame(int frame_index) {
@@ -133,7 +136,7 @@ public class MenuActivity extends Activity implements Runnable{
     @Override
     protected void onResume() {
         super.onResume();
-        if(!file.exists() || file.length() == 0) {
+        if(file != null && (!file.exists() || file.length() == 0)) {
             button.setEnabled(false);
             button.setAlpha(0.3F);
         }
@@ -148,6 +151,20 @@ public class MenuActivity extends Activity implements Runnable{
     protected void onPause() {
         super.onPause();
         animationThread.kill();
+    }
+
+    @Override
+    protected void onDestroy() {
+        file = new File(getFilesDir(), "setting");
+        IOFile.setFile(file);
+        IOFile ioFile = new IOFile();
+
+        try {
+            ioFile.writeData(SoundAndVibra.getSound() + " " + SoundAndVibra.getVibra());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
     }
 
     private void setProcess(Button button, MotionEvent event) {
@@ -172,5 +189,30 @@ public class MenuActivity extends Activity implements Runnable{
 //                if(resultCode == RESULT_CANCELED) this.finish();
 
         }
+    }
+
+    private void getSetting() {
+        file = new File(getFilesDir(), "setting");
+        if(!file.exists()) {
+            SoundAndVibra.turnVibraON();
+            SoundAndVibra.turnSoundON();
+        }
+
+        IOFile.setFile(file);
+        IOFile ioFile = new IOFile();
+
+        String string = "true true";
+        try {
+            string = ioFile.readData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String[] stt = string.split(" ");
+        if(stt[0].equals("false")) SoundAndVibra.turnSoundOFF();
+        else SoundAndVibra.turnVibraON();
+
+        if(stt[1].equals("false")) SoundAndVibra.turnVibraOFF();
+        else SoundAndVibra.turnVibraON();
     }
 }
