@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
-import com.example.firstgame.attributes.SoundAndVibra;
+import com.example.firstgame.attributes.Config;
 import com.example.firstgame.controller.IOFile;
 import com.example.firstgame.thread.AnimationThread;
 
@@ -156,7 +156,8 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         IOFile ioFile = new IOFile();
 
         try {
-            ioFile.writeData(SoundAndVibra.getSound() + " " + SoundAndVibra.getVibra());
+            ioFile.writeData(Config.getSound() + " " + Config.getVibra() + " "
+                    + Config.getBall_resId() + " " + Config.getBall_id());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -190,14 +191,14 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
     private void getSetting() {
         file = new File(getFilesDir(), "setting");
         if(!file.exists()) {
-            SoundAndVibra.turnVibraON();
-            SoundAndVibra.turnSoundON();
+            Config.turnVibraON();
+            Config.turnSoundON();
         }
 
         IOFile.setFile(file);
         IOFile ioFile = new IOFile();
 
-        String string = "true true";
+        String string = "true true 0 0";
         try {
             string = ioFile.readData();
         } catch (Exception e) {
@@ -205,11 +206,22 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         }
 
         String[] stt = string.split(" ");
-        if(stt[0].equals("false")) SoundAndVibra.turnSoundOFF();
-        else SoundAndVibra.turnVibraON();
+        if(stt.length != 4) {
+            string = "true true 0 0";
+            stt = string.split(" ");
+        }
 
-        if(stt[1].equals("false")) SoundAndVibra.turnVibraOFF();
-        else SoundAndVibra.turnVibraON();
+        if(stt[0].equals("false")) Config.turnSoundOFF();
+        else Config.turnVibraON();
+
+        if(stt[1].equals("false")) Config.turnVibraOFF();
+        else Config.turnVibraON();
+
+        if(stt[2].equals("0")) Config.setBall_resId(R.drawable.vn_ball);
+        else Config.setBall_resId(Integer.parseInt(stt[2]));
+
+        if(stt[3].equals("0")) Config.setBall_id(R.id.vn_ball);
+        else Config.setBall_id(Integer.parseInt(stt[3]));
     }
 
     private void openActivity(Class<? extends FullScreenActivity> cls) {

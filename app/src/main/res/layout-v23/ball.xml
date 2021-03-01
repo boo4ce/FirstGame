@@ -45,8 +45,9 @@
                 android:id="@+id/black_white_ball"
                 style="@style/ball_unit"
                 android:foreground="@drawable/black_white_ball_icon" />
-
+            
         </GridLayout>
 
     </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,10 @@
 package com.example.firstgame.attributes;
 
-public class SoundAndVibra {
+public class Config {
     private static boolean sound;
     private static boolean vibra;
+    private static int ball_resId;
+    private static int ball_id;
 
     public static boolean getSound() {
         return sound;
@@ -34,5 +36,21 @@ public class SoundAndVibra {
 
     public static void changeVibraState() {
         vibra = !vibra;
+    }
+
+    public static int getBall_resId() {
+        return ball_resId;
+    }
+
+    public static void setBall_resId(int ball_resId) {
+        Config.ball_resId = ball_resId;
+    }
+
+    public static int getBall_id() {
+        return ball_id;
+    }
+
+    public static void setBall_id(int ball_id) {
+        Config.ball_id = ball_id;
     }
 }

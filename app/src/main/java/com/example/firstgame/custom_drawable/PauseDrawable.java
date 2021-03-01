@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.firstgame.attributes.SoundAndVibra;
+import com.example.firstgame.attributes.Config;
 
 public class PauseDrawable extends Drawable {
     public static final int SPEAKER = 0;
@@ -59,10 +59,10 @@ public class PauseDrawable extends Drawable {
             if(isClick(x, y, rectFs[i])) {
                 switch (i) {
                     case 0:
-                        SoundAndVibra.changeSoundState();
+                        Config.changeSoundState();
                         return PauseDrawable.SPEAKER;
                     case 1:
-                        SoundAndVibra.changeVibraState();
+                        Config.changeVibraState();
                         return PauseDrawable.VIBRATION;
                     case 2:
                         return PauseDrawable.QUIT;
@@ -102,12 +102,12 @@ public class PauseDrawable extends Drawable {
     }
 
     private int getSpeakerFrame() {
-        if(SoundAndVibra.getSound()) return 16;
+        if(Config.getSound()) return 16;
         return 17;
     }
 
     private int getVibrationFrame() {
-        if(SoundAndVibra.getVibra()) return 15;
+        if(Config.getVibra()) return 15;
         return 20;
     }
 }

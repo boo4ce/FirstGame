@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
+import com.example.firstgame.attributes.Config;
 import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
 import com.example.firstgame.custom_drawable.GameOver;
@@ -98,6 +99,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 R.drawable.setting_icon, R.drawable.threat, R.drawable.setting_icon, R.drawable.vibration, //12, 13, 14, 15
                 R.drawable.speaker, R.drawable.mute, R.drawable.resume, R.drawable.restart,  // 16, 17, 18, 19
                 R.drawable.unvibration, R.drawable.quit}; //20, 21
+        list[11] = Config.getBall_resId();
 
         InputStream inputStream;
 
