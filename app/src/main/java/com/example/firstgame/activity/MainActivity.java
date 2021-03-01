@@ -18,7 +18,7 @@ import com.example.firstgame.view.GameView;
 
 import java.io.File;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FullScreenActivity {
     private IOFile ioFile;
     private GameView gameView;
 
@@ -26,9 +26,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         ioFile = new IOFile();
         gameView = new GameView(this);
@@ -37,15 +34,12 @@ public class MainActivity extends Activity {
         if(intent.getIntExtra("flag", 0) == MenuActivity.START_WITH_PREVIOUS_GAME) {
             try {
                 gameView.addContent(ioFile.readData());
-                this.setContentView(this.gameView);
             } catch (Exception e) {
                 Toast.makeText(this, "Error: Can not continue game !!", Toast.LENGTH_SHORT).show();
                 this.finish();
             }
-        } else {
-            this.setContentView(this.gameView);
         }
-
+        this.setContentView(gameView);
     }
 
     @Override
