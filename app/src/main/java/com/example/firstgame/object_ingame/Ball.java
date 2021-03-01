@@ -1,7 +1,9 @@
 package com.example.firstgame.object_ingame;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.view.View;
 
 import com.example.firstgame.view.GameView;
 
@@ -120,4 +122,5 @@ public class Ball extends GameObject implements CommonFunction{
         this.current_row = Integer.parseInt(values[2]);
         this.current_col = Integer.parseInt(values[3]);
     }
+
 }

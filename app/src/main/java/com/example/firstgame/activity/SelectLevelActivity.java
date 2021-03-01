@@ -11,7 +11,7 @@ import android.widget.Button;
 import com.example.firstgame.R;
 import com.example.firstgame.attributes.Level;
 
-public class SelectLevelActivity extends Activity {
+public class SelectLevelActivity extends FullScreenActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     @Override

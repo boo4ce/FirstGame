@@ -1,22 +1,13 @@
 package com.example.firstgame.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Layout;
 import android.view.MotionEvent;
-import android.view.SoundEffectConstants;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,9 +19,8 @@ import com.example.firstgame.controller.IOFile;
 import com.example.firstgame.thread.AnimationThread;
 
 import java.io.File;
-import java.io.Serializable;
 
-public class MenuActivity extends Activity implements Runnable{
+public class MenuActivity extends FullScreenActivity implements Runnable{
     public final static int ENABLE_TO_CLOSE = 132;
     public final static int START_WITH_PREVIOUS_GAME = 20;
     public final static int START_NEW_GAME = 19;
@@ -48,9 +38,6 @@ public class MenuActivity extends Activity implements Runnable{
     @Override
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         this.setContentView(R.layout.menu_activity);
         game_name = findViewById(R.id.name);
@@ -78,12 +65,20 @@ public class MenuActivity extends Activity implements Runnable{
         // ball
         buttons[2].setOnTouchListener((v, event) -> {
             setProcess(buttons[2], event);
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                this.openActivity(SelectBallActivity.class);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
             return true;
         });
 
         // setting
         buttons[3].setOnTouchListener((v, event) -> {
             setProcess(buttons[3], event);
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                this.openActivity(SettingActivity.class);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
             return true;
         });
 
@@ -102,6 +97,7 @@ public class MenuActivity extends Activity implements Runnable{
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("flag", MenuActivity.START_WITH_PREVIOUS_GAME);
                 startActivity(intent);
+                overridePendingTransition(R.anim.appear, R.anim.nothing);
             }
             return true;
         });
@@ -214,5 +210,10 @@ public class MenuActivity extends Activity implements Runnable{
 
         if(stt[1].equals("false")) SoundAndVibra.turnVibraOFF();
         else SoundAndVibra.turnVibraON();
+    }
+
+    private void openActivity(Class<? extends FullScreenActivity> cls) {
+        Intent intent = new Intent(MenuActivity.this, cls);
+        startActivity(intent);
     }
 }
