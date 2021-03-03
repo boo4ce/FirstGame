@@ -10,8 +10,7 @@
 
     <ImageButton
         android:id="@+id/back"
-        android:layout_width="60dp"
-        android:layout_height="30dp"
+        style="@style/back_icon"
         android:layout_marginTop="20dp"
         android:background="@drawable/back"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -31,14 +30,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Level"
-            android:textSize="60sp"
-            android:textColor="@color/white"
-            android:fontFamily="@font/myfont"
-            android:textStyle="normal"
             android:layout_gravity="center"
             android:layout_marginBottom="50dp"
-            android:clickable="false" />
+            android:clickable="false"
+            android:fontFamily="@font/myfont"
+            android:text="Level"
+            android:textColor="@color/white"
+            android:textSize="60sp"
+            android:textStyle="normal"
+            android:textAllCaps="false"/>
 
         <Button
             android:id="@+id/slow"

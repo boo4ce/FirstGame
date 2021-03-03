@@ -16,7 +16,7 @@ public class AnimationThread extends Thread {
         this.running = true;
         while(running) {
             menuActivity.updateFrame(current_frame++);
-            if(current_frame == 28) current_frame = 0;
+            if(current_frame == 36) current_frame = 0;
 
             try {
                 Thread.sleep(50);

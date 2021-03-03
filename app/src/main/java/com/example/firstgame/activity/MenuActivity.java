@@ -44,7 +44,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         mHandler = new Handler(Looper.getMainLooper());
 
         final Button[] buttons = {findViewById(R.id.continues), findViewById(R.id.startGame),
-                findViewById(R.id.ball), findViewById(R.id.setting), findViewById(R.id.quit)};
+                findViewById(R.id.ball), findViewById(R.id.quit)};
 
         button = buttons[0];
 
@@ -72,19 +72,9 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
             return true;
         });
 
-        // setting
+        // quit
         buttons[3].setOnTouchListener((v, event) -> {
             setProcess(buttons[3], event);
-            if(event.getAction() == MotionEvent.ACTION_UP) {
-                this.openActivity(SettingActivity.class);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
-            return true;
-        });
-
-        // quit
-        buttons[4].setOnTouchListener((v, event) -> {
-            setProcess(buttons[4], event);
             if(event.getAction() == MotionEvent.ACTION_UP)
                 MenuActivity.this.finishAndRemoveTask();
             return true;
@@ -110,6 +100,9 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                         R.drawable.game_name_60, R.drawable.game_name_70, R.drawable.game_name_80,
                         R.drawable.game_name_90, R.drawable.game_name_100, R.drawable.game_name_110,
                         R.drawable.game_name_120, R.drawable.game_name_130, R.drawable.game_name_140,
+                        R.drawable.game_name_150_240, R.drawable.game_name_150_240, R.drawable.game_name_150_240,
+                        R.drawable.game_name_150_240, R.drawable.game_name_150_240, R.drawable.game_name_150_240,
+                        R.drawable.game_name_150_240, R.drawable.game_name_150_240, R.drawable.game_name_150_240,
                         R.drawable.game_name_150_240, R.drawable.game_name_250, R.drawable.game_name_260,
                         R.drawable.game_name_270, R.drawable.game_name_280, R.drawable.game_name_290,
                         R.drawable.game_name_300, R.drawable.game_name_310, R.drawable.game_name_320,

@@ -42,11 +42,6 @@
                 android:text="Ball" />
 
             <Button
-                android:id="@+id/setting"
-                style="@style/Box"
-                android:text="Setting" />
-
-            <Button
                 android:id="@+id/quit"
                 style="@style/Box"
                 android:text="Quit" />

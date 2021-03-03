@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.firstgame.attributes.Config;
+import com.example.firstgame.attributes.ObjectSize;
 
 public class PauseDrawable extends Drawable {
     public static final int SPEAKER = 0;
@@ -28,14 +29,14 @@ public class PauseDrawable extends Drawable {
     public PauseDrawable(int screenWidth, int screenHeight, Bitmap[] bitmaps) {
         int segmentWidth = screenWidth/6, segmentHeight = screenHeight/15;
 
-        int size = screenWidth/4;
+        int size = ObjectSize.getSettingButton();
         rectSpeaker = new RectF(segmentWidth, segmentHeight*5,
                 segmentWidth + size, segmentHeight*5 + size);
 
         rectVibra = new RectF(screenWidth - rectSpeaker.left - size, rectSpeaker.top,
                 screenWidth - rectSpeaker.left, rectSpeaker.bottom);
 
-        size = screenWidth/6;
+        size = ObjectSize.getControlButton();
         rectQuit = new RectF(segmentWidth, rectSpeaker.bottom + segmentHeight*2,
                 segmentWidth + size, rectSpeaker.bottom + segmentHeight*2 + size);
 
