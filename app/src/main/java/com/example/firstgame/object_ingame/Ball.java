@@ -29,6 +29,7 @@ public class Ball extends GameObject implements CommonFunction{
     private GameView gameView;
 
     private final int x_min, x_max;
+    private final int needed_y;
 
     public Ball(GameView gameView, Bitmap image, int width, int height) {
 //        super(Bitmap.createScaledBitmap(image, gameView.getRatio(image.getWidth()),
@@ -51,7 +52,8 @@ public class Ball extends GameObject implements CommonFunction{
         this.x = Math.min(x_max - move_per_time, this.x);
         this.x = Math.max(x_min + move_per_time, this.x);
 
-        this.y = gameView.getHeight()*14/15 - height;
+        this.needed_y = gameView.getHeight()*14/15 - height;
+        this.y = gameView.getHeight() + height;
 
         this.way = (new Random().nextBoolean())?Ball.TO_LEFT:Ball.TO_RIGHT;
     }
@@ -64,10 +66,14 @@ public class Ball extends GameObject implements CommonFunction{
     }
 
     public void update() {
-        if(this.way == Ball.TO_LEFT) x -= move_per_time;
-        else x += move_per_time;
-        if(x <= x_min || x >= x_max)
-            this.way = 1 - this.way;
+        if(this.y > needed_y) {
+            this.y -= 5;
+        } else {
+            if(this.way == Ball.TO_LEFT) x -= move_per_time;
+            else x += move_per_time;
+            if(x <= x_min || x >= x_max)
+                this.way = 1 - this.way;
+        }
 
         current_col++;
         if(current_col == col) {
@@ -75,7 +81,6 @@ public class Ball extends GameObject implements CommonFunction{
             current_row++;
             if(current_row == row) current_row = 0;
         }
-
     }
 
     public void draw(Canvas canvas) {
@@ -112,15 +117,16 @@ public class Ball extends GameObject implements CommonFunction{
     }
 
     public String getStatus() {
-        return this.x + " " + this.way + " " + this.current_row + " " + this.current_col;
+        return this.x + " " + this.y + " " + this.way + " " + this.current_row + " " + this.current_col;
     }
 
     public void setStatus(String status) throws NumberFormatException {
         String[] values = status.split(" ");
         this.x = Integer.parseInt(values[0]);
-        this.way = Integer.parseInt(values[1]);
-        this.current_row = Integer.parseInt(values[2]);
-        this.current_col = Integer.parseInt(values[3]);
+        this.y = Integer.parseInt(values[1]);
+        this.way = Integer.parseInt(values[2]);
+        this.current_row = Integer.parseInt(values[3]);
+        this.current_col = Integer.parseInt(values[4]);
     }
 
 }

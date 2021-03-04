@@ -104,7 +104,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             inputStream = getResources().openRawResource(list[i]);
             bitmaps[i] = BitmapFactory.decodeStream(inputStream);
 
-            // get size
+            // get size by function below
             int[] size = this.getSize(i);
             if(size[0] == 0) size[0] = bitmaps[i].getWidth();
             if(size[1] == 0) size[1] = bitmaps[i].getHeight();
@@ -141,9 +141,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameOver = new GameOver(this.getWidth(), this.getHeight(), bitmaps);
     }
 
+    // get size for per object
     private int[] getSize(int i) {
         switch (i) {
-            case 0:
+            case 0: // number
             case 1:
             case 2:
             case 3:
@@ -151,7 +152,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             case 5:
             case 6:
             case 7:
-            case 8:
+            case 8: // still number
             case 9: return new int[]{ObjectSize.getScoreWidth(), ObjectSize.getScoreHeight()};
             case 10: return new int[]{ObjectSize.getScoreScriptWidth(), ObjectSize.getScoreScriptHeight()};
             case 11: return new int[]{ObjectSize.getBallWidth()*6, ObjectSize.getBallHeight()*6};

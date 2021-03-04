@@ -11,7 +11,7 @@ import com.example.firstgame.view.GameView;
 
 import java.util.Random;
 
-public class  Threat extends GameObject implements CommonFunction {
+public class Threat extends GameObject implements CommonFunction {
     public static final int COLLISION = 0;
     public static final int GET_SCORE = 2;
     public static final int NO_COLLISION = 1;

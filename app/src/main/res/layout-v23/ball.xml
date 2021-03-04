@@ -45,7 +45,12 @@
                 android:id="@+id/black_white_ball"
                 style="@style/ball_unit"
                 android:foreground="@drawable/black_white_ball_icon" />
-            
+
+            <ImageView
+                android:id="@+id/tennis_ball"
+                style="@style/ball_unit"
+                android:foreground="@drawable/tennis_ball_icon" />
+
         </GridLayout>
 
     </FrameLayout>
