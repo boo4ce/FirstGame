@@ -28,7 +28,7 @@ public class SelectLevelActivity extends FullScreenActivity {
                 setAnimClick(findViewById(selected_level[j]), event);
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     openNewActivity(level[j]);
-                    setResult(RESULT_OK);
+//                    setResult(RESULT_OK);
                     SelectLevelActivity.this.finish();
                 }
                 return true;
@@ -38,7 +38,7 @@ public class SelectLevelActivity extends FullScreenActivity {
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_OK);
+//                setResult(RESULT_OK);
                 SelectLevelActivity.this.onBackPressed();
             }
         });

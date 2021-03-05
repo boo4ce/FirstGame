@@ -60,7 +60,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                             Toast.makeText(MenuActivity.this, "Delete", Toast.LENGTH_SHORT).show();
                         }
 //                        startActivityForResult(intent, ENABLE_TO_CLOSE);
-                        MenuActivity.this.openActivity(MainActivity.class);
+                        MenuActivity.this.openActivity(SelectLevelActivity.class);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                     return true;
@@ -242,7 +242,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         else Config.setBall_id(Integer.parseInt(stt[3]));
     }
 
-    // open activity without intent's content
+    // open activity without intent's content by this activity
     private void openActivity(Class<? extends FullScreenActivity> cls) {
         Intent intent = new Intent(MenuActivity.this, cls);
         startActivity(intent);
