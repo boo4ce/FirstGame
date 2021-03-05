@@ -37,9 +37,19 @@
 
             <!-- list of ball -->
             <ImageView
-                android:id="@+id/vn_ball"
+                android:id="@+id/yellow_ball"
                 style="@style/ball_unit"
-                android:foreground="@drawable/vn_ball_icon" />
+                android:foreground="@drawable/yellow_ball_icon" />
+
+            <ImageView
+                android:id="@+id/dark_red_ball"
+                style="@style/ball_unit"
+                android:foreground="@drawable/dark_red_ball_icon"/>
+
+            <ImageView
+                android:id="@+id/blue_ball"
+                style="@style/ball_unit"
+                android:foreground="@drawable/blue_ball_icon"/>
 
             <ImageView
                 android:id="@+id/black_white_ball"

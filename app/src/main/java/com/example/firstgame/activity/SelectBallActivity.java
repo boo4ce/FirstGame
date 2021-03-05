@@ -31,8 +31,10 @@ public class SelectBallActivity extends FullScreenActivity {
             }
         });
 
-        final int[] list_id = {R.id.vn_ball, R.id.black_white_ball, R.id.tennis_ball};
-        final int[] list_resId = {R.drawable.vn_ball, R.drawable.black_white_ball, R.drawable.tennis_ball_b};
+        final int[] list_id = {R.id.yellow_ball, R.id.dark_red_ball, R.id.blue_ball,
+                R.id.black_white_ball, R.id.tennis_ball};
+        final int[] list_resId = {R.drawable.yellow_ball, R.drawable.dark_red_ball, R.drawable.blue_ball,
+                R.drawable.black_white_ball, R.drawable.tennis_ball_b};
 
         for(int i = 0; i < list_id.length; i++) {
             final int j = i;

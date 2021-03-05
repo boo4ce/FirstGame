@@ -113,7 +113,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
                 animationThread = new AnimationThread(MenuActivity.this);
                 MenuActivity.this.getSetting();
-                file = new File(getFilesDir(), "filesave");
+                file = new File(getFilesDir(), ".filesave");
                 IOFile.setFile(file);
             }
         }).start();
@@ -159,7 +159,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
     @Override
     protected void onDestroy() {
         // destroy and write file setting
-        file = new File(getFilesDir(), "setting");
+        file = new File(getFilesDir(), ".setting");
         IOFile.setFile(file);
         IOFile ioFile = new IOFile();
 
@@ -201,13 +201,13 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
     // load all configure setting previous
     private void getSetting() {
-        file = new File(getFilesDir(), "setting");
+        file = new File(getFilesDir(), ".setting");
 
         if(!file.exists()) {
             Config.turnVibraON();
             Config.turnSoundON();
             Config.setBall_resId(R.drawable.vn_ball);
-            Config.setBall_id(R.id.vn_ball);
+            Config.setBall_id(R.id.yellow_ball);
 
             return;
         }
@@ -235,10 +235,10 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         if(stt[1].equals("false")) Config.turnVibraOFF();
         else Config.turnVibraON();
 
-        if(stt[2].equals("0")) Config.setBall_resId(R.drawable.vn_ball);
+        if(stt[2].equals("0")) Config.setBall_resId(R.drawable.yellow_ball);
         else Config.setBall_resId(Integer.parseInt(stt[2]));
 
-        if(stt[3].equals("0")) Config.setBall_id(R.id.vn_ball);
+        if(stt[3].equals("0")) Config.setBall_id(R.id.yellow_ball);
         else Config.setBall_id(Integer.parseInt(stt[3]));
     }
 

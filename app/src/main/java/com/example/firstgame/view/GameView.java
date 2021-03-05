@@ -257,6 +257,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public final String filesave() {
+        if(gameController == null) return "";
         return gameController.filesave();
     }
 }
