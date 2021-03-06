@@ -2,6 +2,8 @@ package com.example.firstgame.object_ingame;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.example.firstgame.attributes.Level;
 import com.example.firstgame.attributes.MyMath;
@@ -9,7 +11,7 @@ import com.example.firstgame.view.GameView;
 
 import java.util.Random;
 
-public class  Threat extends GameObject implements CommonFunction {
+public class Threat extends GameObject implements CommonFunction {
     public static final int COLLISION = 0;
     public static final int GET_SCORE = 2;
     public static final int NO_COLLISION = 1;
@@ -28,11 +30,24 @@ public class  Threat extends GameObject implements CommonFunction {
 
     private final int hori_move, verti_move, verti_move_boost;
 
+    private static short red;
+    private static boolean changeOn;
+    private static Paint wall_paint;
+
+    static {
+        red = 150;
+        changeOn = false;
+
+        wall_paint = new Paint();
+        wall_paint.setStyle(Paint.Style.FILL);
+        wall_paint.setARGB(255, red, 0, 0);
+    }
+
     public Threat(GameView gameView, Ball ball, Bitmap image, int width, int height) {
-        super(Bitmap.createScaledBitmap(image, image.getWidth(),
-                GameView.getRatio(image.getHeight()), false),
-                GameView.getRatio(width), GameView.getRatio(height));
-//        super(image, width, height);
+//        super(Bitmap.createScaledBitmap(image, image.getWidth(),
+//                GameView.getRatio(image.getHeight()), false),
+//                GameView.getRatio(width), GameView.getRatio(height));
+        super(image, width, height);
 
         this.gameView = gameView;
         this.ball = ball;
@@ -65,6 +80,10 @@ public class  Threat extends GameObject implements CommonFunction {
         running = true;
         effected = false;
 
+        if(changeOn) {
+            red--;
+            wall_paint.setARGB(255, red, 0, 0);
+        }
     }
 
     @Override
@@ -86,12 +105,16 @@ public class  Threat extends GameObject implements CommonFunction {
 
     @Override
     public void draw(Canvas canvas) {
-        if(x_hold > 0)
-            canvas.drawBitmap(this.getSubBitmap(0, 0, x_hold), this.x, this.y, null);
+        if(x_hold > 0) {
+//            canvas.drawBitmap(this.getSubBitmap(0, 0, x_hold), this.x, this.y, null);
+            canvas.drawRect(new Rect(0, this.y, x_hold, this.y + this.height), wall_paint);
+        }
 
-        if(x_hold < x_max)
-            canvas.drawBitmap(this.getSubBitmap(0, 0, x_max - x_hold),
-                    this.x + x_hold + hold_width, this.y, null);
+        if(x_hold < x_max) {
+//            canvas.drawBitmap(this.getSubBitmap(0, 0, x_max - x_hold),
+//                    this.x + x_hold + hold_width, this.y, null);
+            canvas.drawRect(new Rect(x_hold+hold_width, this.y, gameView.getWidth(), this.y + this.height), wall_paint);
+        }
     }
 
 
@@ -124,7 +147,7 @@ public class  Threat extends GameObject implements CommonFunction {
         return new Threat(this.gameView, this.ball, this.image, this.width, this.height);
     }
 
-    public int checkCollision_and_getScore() {
+    public final int checkCollision_and_getScore() {
         if(this.isEffected() || this.y < ball.y - this.height) return Threat.NO_COLLISION;
         int hold_center_x = x_hold + hold_width/2, hold_center_y = this.y + height/2;
 
@@ -184,5 +207,13 @@ public class  Threat extends GameObject implements CommonFunction {
         this.direct = Boolean.parseBoolean(values[2]);
         this.running = Boolean.parseBoolean(values[3]);
         this.effected = Boolean.parseBoolean(values[4]);
+    }
+
+    public void changeColor(int a, int r, int g, int b) {
+        wall_paint.setARGB(a, r, g, b);
+    }
+
+    public static void enableChangeColor() {
+        changeOn = true;
     }
 }

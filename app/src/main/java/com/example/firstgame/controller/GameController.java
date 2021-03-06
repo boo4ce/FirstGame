@@ -61,14 +61,14 @@ public class GameController {
 
     }
 
-    public void update() {
+    public final void update() {
         ball.update();
         for(int i = 0; i < threats.size(); i++) {
             threats.get(i).update();
         }
     }
 
-    public void threatController() {
+    public final void threatController() {
         for(int i = 0; i < threats.size(); i++) {
             if(threats.get(i).die()) {
                 threats.remove(i);
@@ -78,7 +78,7 @@ public class GameController {
         threats.add(basicThreat.clone());
     }
 
-    public boolean checkCollision() {
+    public final boolean checkCollision() {
         int flag;
         for(int i = 0; i < threats.size(); i++) {
             flag = threats.get(i).checkCollision_and_getScore();
@@ -106,7 +106,7 @@ public class GameController {
         }
     }
 
-    public int touchProcess(MotionEvent motionEvent) {
+    public final int touchProcess(MotionEvent motionEvent) {
         if(motionEvent.getX() >= gameView.getWidth() - 80 && motionEvent.getY() <= 80) {
             return GameController.PAUSE;
         }
@@ -145,7 +145,7 @@ public class GameController {
         return running && !pause;
     }
 
-    public void setGameOver() {
+    public final void setGameOver() {
         running = false;
     }
 
@@ -164,7 +164,7 @@ public class GameController {
         }
     }
 
-    public boolean isOver() {
+    public final boolean isOver() {
         return (running==false);
     }
 

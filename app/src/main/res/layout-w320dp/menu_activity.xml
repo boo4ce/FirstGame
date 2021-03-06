@@ -18,7 +18,10 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent"
+        android:fadeScrollbars="true"
+        android:fadingEdge="horizontal"
+        android:overScrollMode="never">
         <LinearLayout
             android:id="@+id/menu_layout"
             android:layout_width="260dp"

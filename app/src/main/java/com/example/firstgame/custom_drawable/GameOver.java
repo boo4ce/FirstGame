@@ -10,15 +10,17 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.firstgame.attributes.ObjectSize;
+
 public class GameOver extends Drawable {
     public static final int QUIT = 2;
     public static final int RESTART = 3;
 
     private final RectF rectQuit, rectRestart;
-    private Bitmap[] bitmaps;
+    private final Bitmap[] bitmaps;
 
     public GameOver(int screenWidth, int screenHeight, Bitmap[] bitmaps) {
-        int size = screenWidth/4;
+        int size = ObjectSize.getSettingButton();
 
         rectQuit = new RectF(screenWidth/3 - size/2, screenHeight - size*2,
                 screenWidth/3 + size/2, screenHeight - size);

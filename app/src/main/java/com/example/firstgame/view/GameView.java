@@ -6,15 +6,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.os.Build;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
 import com.example.firstgame.attributes.Config;
@@ -64,7 +61,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             for(int i = 0; i < threats.size(); i++) {
                 threats.get(i).draw(canvas);
             }
-            canvas.drawBitmap(bitmaps[14], this.getWidth() - 80, 0, null);
+            canvas.drawBitmap(bitmaps[12], this.getWidth() - bitmaps[12].getWidth(), 0, null);
             gameController.getBall().draw(canvas);
             if(gameController.isOver()) {
                 gameOver.draw(canvas);
@@ -106,14 +103,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for(int i = 0; i < list.length; i++) {
             inputStream = getResources().openRawResource(list[i]);
             bitmaps[i] = BitmapFactory.decodeStream(inputStream);
+
+            // get size by function below
+            int[] size = this.getSize(i);
+            if(size[0] == 0) size[0] = bitmaps[i].getWidth();
+            if(size[1] == 0) size[1] = bitmaps[i].getHeight();
+
+            // get scale bitmap
+            bitmaps[i] = Bitmap.createScaledBitmap(bitmaps[i], size[0], size[1], false);
         }
 
-        bitmaps[14] = Bitmap.createScaledBitmap(bitmaps[14], bitmaps[14].getWidth()/2,
-                bitmaps[14].getHeight()/2, false);
-
-        Ball ball = new Ball(GameView.this, bitmaps[11], ObjectSize.BALL_WIDTH, ObjectSize.BALL_HEIGHT);
+        Ball ball = new Ball(GameView.this, bitmaps[11], ObjectSize.getBallWidth(),
+                ObjectSize.getBallHeight());
         Threat basicThreat = new Threat(GameView.this, ball, bitmaps[13], this.getWidth(),
-                ObjectSize.HOLD_HEIGHT);
+                ObjectSize.getHoldHeight());
         Score score = new Score(GameView.this, bitmaps[10],
                 subArray(bitmaps, 0, 9), 250, 300);
 
@@ -136,6 +139,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         pauseDrawable = new PauseDrawable(this.getWidth(), this.getHeight(), bitmaps);
         gameOver = new GameOver(this.getWidth(), this.getHeight(), bitmaps);
+    }
+
+    // get size for per object
+    private int[] getSize(int i) {
+        switch (i) {
+            case 0: // number
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8: // still number
+            case 9: return new int[]{ObjectSize.getScoreWidth(), ObjectSize.getScoreHeight()};
+            case 10: return new int[]{ObjectSize.getScoreScriptWidth(), ObjectSize.getScoreScriptHeight()};
+            case 11: return new int[]{ObjectSize.getBallWidth()*6, ObjectSize.getBallHeight()*6};
+            case 12: return new int[]{ObjectSize.getSettingIcon(), ObjectSize.getSettingIcon()};
+            case 13: return new int[]{0, ObjectSize.getHoldHeight()};
+            default: return new int[]{0, 0};
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -233,6 +257,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public final String filesave() {
+        if(gameController == null) return "";
         return gameController.filesave();
     }
 }
