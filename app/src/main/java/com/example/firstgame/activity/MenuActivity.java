@@ -44,7 +44,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         mHandler = new Handler(Looper.getMainLooper());
 
         final Button[] buttons = {findViewById(R.id.continues), findViewById(R.id.startGame),
-                findViewById(R.id.ball), findViewById(R.id.quit)};
+                findViewById(R.id.ball), findViewById(R.id.highscore), findViewById(R.id.quit)};
 
         button = buttons[0];
 
@@ -56,9 +56,6 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                 buttons[1].setOnTouchListener((v, event) -> {
                     setProcess(buttons[1], event);
                     if(event.getAction() == MotionEvent.ACTION_UP) {
-                        if(button.isEnabled()) {
-                            Toast.makeText(MenuActivity.this, "Delete", Toast.LENGTH_SHORT).show();
-                        }
 //                        startActivityForResult(intent, ENABLE_TO_CLOSE);
                         MenuActivity.this.openActivity(SelectLevelActivity.class);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -79,6 +76,16 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                 // quit
                 buttons[3].setOnTouchListener((v, event) -> {
                     setProcess(buttons[3], event);
+                    if(event.getAction() == MotionEvent.ACTION_UP) {
+                        MenuActivity.this.openActivity(HighScoreActivity.class);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
+                    return true;
+                });
+
+                // quit
+                buttons[4].setOnTouchListener((v, event) -> {
+                    setProcess(buttons[4], event);
                     if(event.getAction() == MotionEvent.ACTION_UP)
                         MenuActivity.this.finishAndRemoveTask();
                     return true;
@@ -159,7 +166,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
     @Override
     protected void onDestroy() {
         // destroy and write file setting
-        file = new File(getFilesDir(), ".setting");
+        file = new File(getFilesDir(), ".config");
         IOFile.setFile(file);
         IOFile ioFile = new IOFile();
 
@@ -201,7 +208,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
     // load all configure setting previous
     private void getSetting() {
-        file = new File(getFilesDir(), ".setting");
+        file = new File(getFilesDir(), ".config");
 
         if(!file.exists()) {
             Config.turnVibraON();

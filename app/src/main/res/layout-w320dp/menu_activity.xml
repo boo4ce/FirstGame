@@ -45,6 +45,11 @@
                 android:text="Ball" />
 
             <Button
+                android:id="@+id/highscore"
+                style="@style/Box"
+                android:text="High Score" />
+
+            <Button
                 android:id="@+id/quit"
                 style="@style/Box"
                 android:text="Quit" />
