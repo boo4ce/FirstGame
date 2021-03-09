@@ -1,5 +1,7 @@
 package com.example.firstgame.activity;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -7,25 +9,26 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import androidx.core.content.ContextCompat;
+
 import com.example.firstgame.R;
 import com.example.firstgame.attributes.Config;
 
 public class HighScoreActivity extends FullScreenActivity{
     private float first_xCoordinate_of_touch = -1;
-    private boolean pullable = true, firstTime = true;
-    private ImageView[] list;
+    private boolean pullable = true;
+    private Drawable[] list;
+    private int current_drawable;
 
     @Override
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         this.setContentView(R.layout.high_score);
 
-        list = new ImageView[]{findViewById(R.id.left_view), findViewById(R.id.center_view),
-                        findViewById(R.id.right_view)};
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screen_width = displayMetrics.widthPixels;
+        list = new Drawable[]{ContextCompat.getDrawable(getApplicationContext(), R.drawable.yellow_ball_icon),
+                ContextCompat.getDrawable(getApplicationContext(), R.drawable.blue_ball_icon),
+                ContextCompat.getDrawable(getApplicationContext(), R.drawable.dark_red_ball_icon)};
+        current_drawable = 1;
 
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,15 +41,6 @@ public class HighScoreActivity extends FullScreenActivity{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
-        if(firstTime) {
-            int translationX = list[1].getLeft();
-            int width = list[1].getWidth();
-            list[0].setLeft(-translationX - width);
-            list[0].setRight(-translationX);
-            list[2].setLeft(Config.getScreenWidth() + translationX);
-            list[2].setRight(Config.getScreenWidth() + translationX + width);
-            firstTime = false;
-        }
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -58,13 +52,13 @@ public class HighScoreActivity extends FullScreenActivity{
 
                 pullable = false;
                 if(isPullLeft(first_xCoordinate_of_touch, event.getX())) {
-                    list[1].startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.out_right));
-                    list[0].startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.in_left));
-//                    rotateRight();
+                    current_drawable--;
+                    if(current_drawable == -1) current_drawable = 2;
+                    findViewById(R.id.center_view).setBackground(list[current_drawable]);
                 } else if(isPullRight(first_xCoordinate_of_touch, event.getX())) {
-                    list[1].startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.out_left));
-                    list[2].startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.in_right));
-//                    rotateLeft();
+                    current_drawable++;
+                    if(current_drawable == 3) current_drawable = 0;
+                    findViewById(R.id.center_view).setBackground(list[current_drawable]);
                 }
 
                 break;
@@ -88,23 +82,10 @@ public class HighScoreActivity extends FullScreenActivity{
         return x1 > x2;
     }
 
-    private void rotateLeft() {
-        ImageView tmp = list[0];
-        for(int i = 1; i < list.length; i++)
-            list[i-1] = list[i];
-        list[list.length-1] = tmp;
-    }
-
-    private void rotateRight() {
-        ImageView tmp = list[list.length - 1];
-        for(int i = list.length - 1; i > 0; i--)
-            list[i] = list[i-1];
-        list[0] = tmp;
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
+
 }
