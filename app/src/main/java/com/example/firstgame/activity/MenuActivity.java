@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
 import com.example.firstgame.attributes.Config;
+import com.example.firstgame.attributes.Score;
 import com.example.firstgame.controller.IOFile;
 import com.example.firstgame.thread.AnimationThread;
 
@@ -129,6 +130,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
                 animationThread = new AnimationThread(MenuActivity.this);
                 MenuActivity.this.getSetting();
+                MenuActivity.this.getScore();
                 file = new File(getFilesDir(), ".filesave");
                 IOFile.setFile(file);
             }
@@ -186,6 +188,17 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // save high score
+        file = new File(getFilesDir(), ".score");
+        IOFile.setFile(file);
+        try {
+            ioFile.writeData(Score.getLow_highScore() + " " + Score.getNormal_highScore() +
+                    " " + Score.getFast_highScore() + " qwerty");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         super.onDestroy();
     }
 
@@ -258,6 +271,41 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         if(stt[3].equals("0")) Config.setBall_id(R.id.yellow_ball);
         else Config.setBall_id(Integer.parseInt(stt[3]));
 
+    }
+
+    //get high score
+    private void getScore() {
+        file = new File(getFilesDir(), ".score");
+
+        if(!file.exists()) {
+            Score.setLow_highScore(0);
+            Score.setNormal_highScore(0);
+            Score.setFast_highScore(0);
+            return;
+        }
+
+        IOFile.setFile(file);
+        IOFile ioFile = new IOFile();
+
+        //set default highscore
+        String string = "0 0 0 qwerty";
+        try {
+            string = ioFile.readData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String[] strs = string.split(" ");
+        if(!strs[3].equals("qwerty")) {
+            Score.setLow_highScore(0);
+            Score.setNormal_highScore(0);
+            Score.setFast_highScore(0);
+            return;
+        }
+
+        Score.setLow_highScore(Integer.parseInt(strs[0]));
+        Score.setNormal_highScore(Integer.parseInt(strs[1]));
+        Score.setFast_highScore(Integer.parseInt(strs[2]));
     }
 
     // open activity without intent's content by this activity

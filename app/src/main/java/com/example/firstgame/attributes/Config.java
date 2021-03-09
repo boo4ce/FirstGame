@@ -71,4 +71,6 @@ public class Config {
     public static void setScreenHeight(int screenHeight) {
         Config.screen_height = screen_height;
     }
+
+
 }

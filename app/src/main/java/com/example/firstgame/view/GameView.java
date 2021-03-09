@@ -235,12 +235,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     //
     private void dispose() {
         this.gameController.setFilesaveValues(GameController.EMPTY_FILESAVE);
+        this.gameController.updateHighScore();
         this.gameController.clear();
         ((Activity) GameView.this.getContext()).finish();
     }
 
     private void dispose_and_save() {
         this.gameController.setFilesaveValues(GameController.HAVE_FILESAVE);
+        this.gameController.updateHighScore();
         this.gameController.clear();
         ((Activity) GameView.this.getContext()).finish();
     }
@@ -250,6 +252,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         boolean stt = gameController.isPause();
         if(stt) {
             this.gameController.setFilesaveValues(GameController.HAVE_FILESAVE);
+            this.gameController.updateHighScore();
             this.gameController.clear();
         }
         gameController.gamePause();

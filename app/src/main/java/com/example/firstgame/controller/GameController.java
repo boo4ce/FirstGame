@@ -201,6 +201,10 @@ public class GameController {
         return content;
     }
 
+    public final void updateHighScore() {
+        this.score.updateHighScore();
+    }
+
     public void clear() {
         this.ball = null;
         this.threats = null;

@@ -17,14 +17,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:layout_width="280dp"
-        android:layout_height="75dp"
+        android:layout_width="210dp"
+        android:layout_height="56.25dp"
         android:text="High Score"
         android:gravity="center"
         style="@style/text_view_only"
         android:background="@drawable/round_rect"
-        android:textSize="50sp"
-        android:layout_marginBottom="20dp"
+        android:textSize="37.5sp"
+        android:layout_marginBottom="15dp"
 
         app:layout_constraintBottom_toTopOf="@id/center_view"
         app:layout_constraintLeft_toLeftOf="@id/center_view"
@@ -32,12 +32,12 @@
 
     <LinearLayout
         android:id="@+id/center_view"
-        android:layout_width="300dp"
-        android:layout_height="350dp"
+        android:layout_width="225dp"
+        android:layout_height="262.5dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:clickable="false"
-        android:padding="30dp"
+        android:padding="22.5dp"
         android:background="@drawable/round_rect"
         app:layout_constraintVertical_bias="0.6"
         app:layout_constraintTop_toTopOf="parent"
@@ -51,16 +51,16 @@
             android:layout_height="wrap_content"
             android:text="Low"
             style="@style/text_view_only"
-            android:textSize="40sp"/>
+            android:textSize="30sp"/>
 
         <TextView
             android:id="@+id/score"
             style="@style/text_view_only"
-            android:textSize="70sp"
+            android:textSize="52.5sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"/>
+            android:layout_marginTop="37.5dp"/>
 
     </LinearLayout>
 

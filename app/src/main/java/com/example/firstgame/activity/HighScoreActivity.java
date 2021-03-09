@@ -1,5 +1,6 @@
 package com.example.firstgame.activity;
 
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,16 +9,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.firstgame.R;
 import com.example.firstgame.attributes.Config;
+import com.example.firstgame.attributes.Score;
 
 public class HighScoreActivity extends FullScreenActivity{
     private float first_xCoordinate_of_touch = -1;
     private boolean pullable = true;
-    private Drawable[] list;
     private int current_drawable;
 
     @Override
@@ -25,10 +27,7 @@ public class HighScoreActivity extends FullScreenActivity{
         super.onCreate(saveInstanceState);
         this.setContentView(R.layout.high_score);
 
-        list = new Drawable[]{ContextCompat.getDrawable(getApplicationContext(), R.drawable.yellow_ball_icon),
-                ContextCompat.getDrawable(getApplicationContext(), R.drawable.blue_ball_icon),
-                ContextCompat.getDrawable(getApplicationContext(), R.drawable.dark_red_ball_icon)};
-        current_drawable = 1;
+        current_drawable = 0;
 
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +35,8 @@ public class HighScoreActivity extends FullScreenActivity{
                 HighScoreActivity.this.onBackPressed();
             }
         });
+
+        ((TextView) findViewById(R.id.score)).setText(Score.getLow_highScore() + "");
     }
 
     @Override
@@ -54,13 +55,11 @@ public class HighScoreActivity extends FullScreenActivity{
                 if(isPullLeft(first_xCoordinate_of_touch, event.getX())) {
                     current_drawable--;
                     if(current_drawable == -1) current_drawable = 2;
-                    findViewById(R.id.center_view).setBackground(list[current_drawable]);
                 } else if(isPullRight(first_xCoordinate_of_touch, event.getX())) {
                     current_drawable++;
                     if(current_drawable == 3) current_drawable = 0;
-                    findViewById(R.id.center_view).setBackground(list[current_drawable]);
                 }
-
+                change();
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -88,4 +87,21 @@ public class HighScoreActivity extends FullScreenActivity{
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
+    private void change() {
+        switch (current_drawable) {
+            case 0:
+                ((TextView) findViewById(R.id.level)).setText("Low");
+                ((TextView) findViewById(R.id.score)).setText(Score.getLow_highScore() + "");
+                break;
+            case 1:
+                ((TextView) findViewById(R.id.level)).setText("Normal");
+                ((TextView) findViewById(R.id.score)).setText(Score.getNormal_highScore()  + "");
+                break;
+            case 2:
+                ((TextView) findViewById(R.id.level)).setText("Fast");
+                ((TextView) findViewById(R.id.score)).setText(Score.getFast_highScore()  + "");
+                break;
+            default:
+        }
+    }
 }
