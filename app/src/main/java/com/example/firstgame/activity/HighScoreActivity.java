@@ -1,16 +1,18 @@
 package com.example.firstgame.activity;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.example.firstgame.R;
+import com.example.firstgame.attributes.Config;
 
 public class HighScoreActivity extends FullScreenActivity{
     private float first_xCoordinate_of_touch = -1;
-    private boolean pullable = true;
+    private boolean pullable = true, firstTime = true;
     private ImageView[] list;
 
     @Override
@@ -20,6 +22,10 @@ public class HighScoreActivity extends FullScreenActivity{
 
         list = new ImageView[]{findViewById(R.id.left_view), findViewById(R.id.center_view),
                         findViewById(R.id.right_view)};
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screen_width = displayMetrics.widthPixels;
 
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,6 +38,15 @@ public class HighScoreActivity extends FullScreenActivity{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
+        if(firstTime) {
+            int translationX = list[1].getLeft();
+            int width = list[1].getWidth();
+            list[0].setLeft(-translationX - width);
+            list[0].setRight(-translationX);
+            list[2].setLeft(Config.getScreenWidth() + translationX);
+            list[2].setRight(Config.getScreenWidth() + translationX + width);
+            firstTime = false;
+        }
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -47,8 +62,8 @@ public class HighScoreActivity extends FullScreenActivity{
                     list[0].startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.in_left));
 //                    rotateRight();
                 } else if(isPullRight(first_xCoordinate_of_touch, event.getX())) {
-                    list[1].startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_left));
-                    list[2].startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_in_right));
+                    list[1].startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.out_left));
+                    list[2].startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.in_right));
 //                    rotateLeft();
                 }
 

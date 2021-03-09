@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,6 +41,14 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         super.onCreate(saveInstanceState);
 
         this.setContentView(R.layout.menu_activity);
+
+        //get screen size
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        Config.setScreenWidth(displayMetrics.widthPixels);
+        Config.setScreenHeight(displayMetrics.heightPixels);
+
+
         game_name = findViewById(R.id.name);
         mHandler = new Handler(Looper.getMainLooper());
 
@@ -73,7 +82,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                     return true;
                 });
 
-                // quit
+                // highscore
                 buttons[3].setOnTouchListener((v, event) -> {
                     setProcess(buttons[3], event);
                     if(event.getAction() == MotionEvent.ACTION_UP) {
@@ -128,7 +137,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
     public void updateFrame(int frame_index) {
         this.frame_index = frame_index;
-        mHandler.post(this::run);
+        mHandler.post(this);
     }
 
     @Override
@@ -151,6 +160,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         }
 
         // resume or start new animation of ball
+        animationThread = new AnimationThread(this);
         this.animationThread.start();
     }
 
@@ -213,7 +223,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         if(!file.exists()) {
             Config.turnVibraON();
             Config.turnSoundON();
-            Config.setBall_resId(R.drawable.vn_ball);
+            Config.setBall_resId(R.drawable.yellow_ball);
             Config.setBall_id(R.id.yellow_ball);
 
             return;
@@ -247,6 +257,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
         if(stt[3].equals("0")) Config.setBall_id(R.id.yellow_ball);
         else Config.setBall_id(Integer.parseInt(stt[3]));
+
     }
 
     // open activity without intent's content by this activity
