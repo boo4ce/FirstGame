@@ -18,16 +18,17 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="UselessParent"
         android:fadeScrollbars="true"
         android:fadingEdge="horizontal"
-        android:overScrollMode="never">
+        android:overScrollMode="never"
+        tools:ignore="UselessParent">
+
         <LinearLayout
             android:id="@+id/menu_layout"
             android:layout_width="260dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/continues"
@@ -43,6 +44,11 @@
                 android:id="@+id/ball"
                 style="@style/Box"
                 android:text="Ball" />
+
+            <Button
+                android:id="@+id/highscore"
+                style="@style/Box"
+                android:text="High Score" />
 
             <Button
                 android:id="@+id/quit"

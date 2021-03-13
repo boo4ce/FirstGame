@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/black_light">
+    android:background="@color/black_light"
+    tools:ignore="ContentDescription">
 
     <ImageButton
         android:id="@+id/back"
@@ -13,8 +14,7 @@
         android:layout_marginTop="15dp"
         android:background="@drawable/back"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -27,13 +27,13 @@
 
         <GridLayout
             android:id="@+id/ball_list"
-            android:layout_width="225dp"
-            android:layout_height="225dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:columnCount="3"
-            android:rowCount="3"
             android:orientation="horizontal"
-            tools:ignore="ContentDescription,UselessParent">
+            android:rowCount="3"
+            tools:ignore="UselessParent">
 
             <!-- list of ball -->
             <ImageView
@@ -44,12 +44,12 @@
             <ImageView
                 android:id="@+id/dark_red_ball"
                 style="@style/ball_unit"
-                android:foreground="@drawable/dark_red_ball_icon"/>
+                android:foreground="@drawable/dark_red_ball_icon" />
 
             <ImageView
                 android:id="@+id/blue_ball"
                 style="@style/ball_unit"
-                android:foreground="@drawable/blue_ball_icon"/>
+                android:foreground="@drawable/blue_ball_icon" />
 
             <ImageView
                 android:id="@+id/black_white_ball"

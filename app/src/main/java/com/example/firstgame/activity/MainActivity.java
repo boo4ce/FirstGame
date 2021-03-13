@@ -3,22 +3,25 @@ package com.example.firstgame.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.firstgame.controller.GameController;
 import com.example.firstgame.controller.IOFile;
 import com.example.firstgame.view.GameView;
 
 public class MainActivity extends FullScreenActivity {
     private IOFile ioFile;
     private GameView gameView;
+    private boolean isPause, isDispose;
+    private String current_game;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
+        isPause = false; isDispose = false;
 
         ioFile = new IOFile();
         gameView = new GameView(this);
@@ -28,43 +31,34 @@ public class MainActivity extends FullScreenActivity {
         Intent intent = getIntent();
         if(intent.getIntExtra("flag", 0) == MenuActivity.START_WITH_PREVIOUS_GAME) {
             try {
-                gameView.addContent(ioFile.readData());
+                gameView.loadContent(ioFile.readData(), GameController.NOT_PAUSE);
             } catch (Exception e) {
                 Toast.makeText(this, "Error: Can not continue game !!", Toast.LENGTH_SHORT).show();
                 this.finish();
             }
         }
+
         this.setContentView(gameView);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        if(isPause) {
+            gameView.loadContent(current_game, GameController.PAUSE);
+//            gameView.pause(false);
+            isPause = false;
+        }
+        super.onStart();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void finish() {
-        this.save();
-        super.finish();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
-        if(gameView.pause()) {
-            return super.onKeyDown(keyCode, keyEvent);
+        if(!isDispose) {
+            gameView.pause(true);
+            current_game = gameView.filesave();
+            isPause = true;
         }
-
-        return false;
     }
 
     private void save() {
@@ -81,4 +75,17 @@ public class MainActivity extends FullScreenActivity {
         }
     }
 
+    @Override
+    public void finish() {
+        this.save();
+        isDispose = true;
+        super.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(gameView.pause(false)) {
+            super.onBackPressed();
+        }
+    }
 }

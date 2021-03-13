@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/black_light">
+    android:background="@color/black_light"
+    tools:ignore="ContentDescription">
 
     <ImageButton
         android:id="@+id/back"
@@ -13,8 +14,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/back"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -33,7 +33,7 @@
             android:columnCount="3"
             android:rowCount="3"
             android:orientation="horizontal"
-            tools:ignore="ContentDescription,UselessParent">
+            tools:ignore="UselessParent">
 
             <!-- list of ball -->
             <ImageView

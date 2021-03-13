@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.firstgame.R;
 import com.example.firstgame.attributes.Config;
+import com.example.firstgame.attributes.Score;
 import com.example.firstgame.controller.IOFile;
 import com.example.firstgame.thread.AnimationThread;
 
@@ -40,11 +42,19 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         super.onCreate(saveInstanceState);
 
         this.setContentView(R.layout.menu_activity);
+
+        //get screen size
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        Config.setScreenWidth(displayMetrics.widthPixels);
+        Config.setScreenHeight(displayMetrics.heightPixels);
+
+
         game_name = findViewById(R.id.name);
         mHandler = new Handler(Looper.getMainLooper());
 
         final Button[] buttons = {findViewById(R.id.continues), findViewById(R.id.startGame),
-                findViewById(R.id.ball), findViewById(R.id.quit)};
+                findViewById(R.id.ball), findViewById(R.id.highscore), findViewById(R.id.quit)};
 
         button = buttons[0];
 
@@ -56,9 +66,6 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                 buttons[1].setOnTouchListener((v, event) -> {
                     setProcess(buttons[1], event);
                     if(event.getAction() == MotionEvent.ACTION_UP) {
-                        if(button.isEnabled()) {
-                            Toast.makeText(MenuActivity.this, "Delete", Toast.LENGTH_SHORT).show();
-                        }
 //                        startActivityForResult(intent, ENABLE_TO_CLOSE);
                         MenuActivity.this.openActivity(SelectLevelActivity.class);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -76,9 +83,19 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                     return true;
                 });
 
-                // quit
+                // highscore
                 buttons[3].setOnTouchListener((v, event) -> {
                     setProcess(buttons[3], event);
+                    if(event.getAction() == MotionEvent.ACTION_UP) {
+                        MenuActivity.this.openActivity(HighScoreActivity.class);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
+                    return true;
+                });
+
+                // quit
+                buttons[4].setOnTouchListener((v, event) -> {
+                    setProcess(buttons[4], event);
                     if(event.getAction() == MotionEvent.ACTION_UP)
                         MenuActivity.this.finishAndRemoveTask();
                     return true;
@@ -113,6 +130,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
                 animationThread = new AnimationThread(MenuActivity.this);
                 MenuActivity.this.getSetting();
+                MenuActivity.this.getScore();
                 file = new File(getFilesDir(), ".filesave");
                 IOFile.setFile(file);
             }
@@ -121,7 +139,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
     public void updateFrame(int frame_index) {
         this.frame_index = frame_index;
-        mHandler.post(this::run);
+        mHandler.post(this);
     }
 
     @Override
@@ -144,6 +162,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         }
 
         // resume or start new animation of ball
+        animationThread = new AnimationThread(this);
         this.animationThread.start();
     }
 
@@ -159,7 +178,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
     @Override
     protected void onDestroy() {
         // destroy and write file setting
-        file = new File(getFilesDir(), ".setting");
+        file = new File(getFilesDir(), ".config");
         IOFile.setFile(file);
         IOFile ioFile = new IOFile();
 
@@ -169,6 +188,17 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // save high score
+        file = new File(getFilesDir(), ".score");
+        IOFile.setFile(file);
+        try {
+            ioFile.writeData(Score.getLow_highScore() + " " + Score.getNormal_highScore() +
+                    " " + Score.getFast_highScore() + " qwerty");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         super.onDestroy();
     }
 
@@ -201,12 +231,12 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
     // load all configure setting previous
     private void getSetting() {
-        file = new File(getFilesDir(), ".setting");
+        file = new File(getFilesDir(), ".config");
 
         if(!file.exists()) {
             Config.turnVibraON();
             Config.turnSoundON();
-            Config.setBall_resId(R.drawable.vn_ball);
+            Config.setBall_resId(R.drawable.yellow_ball);
             Config.setBall_id(R.id.yellow_ball);
 
             return;
@@ -240,6 +270,42 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
         if(stt[3].equals("0")) Config.setBall_id(R.id.yellow_ball);
         else Config.setBall_id(Integer.parseInt(stt[3]));
+
+    }
+
+    //get high score
+    private void getScore() {
+        file = new File(getFilesDir(), ".score");
+
+        if(!file.exists()) {
+            Score.setLow_highScore(0);
+            Score.setNormal_highScore(0);
+            Score.setFast_highScore(0);
+            return;
+        }
+
+        IOFile.setFile(file);
+        IOFile ioFile = new IOFile();
+
+        //set default highscore
+        String string = "0 0 0 qwerty";
+        try {
+            string = ioFile.readData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String[] strs = string.split(" ");
+        if(!strs[3].equals("qwerty")) {
+            Score.setLow_highScore(0);
+            Score.setNormal_highScore(0);
+            Score.setFast_highScore(0);
+            return;
+        }
+
+        Score.setLow_highScore(Integer.parseInt(strs[0]));
+        Score.setNormal_highScore(Integer.parseInt(strs[1]));
+        Score.setFast_highScore(Integer.parseInt(strs[2]));
     }
 
     // open activity without intent's content by this activity

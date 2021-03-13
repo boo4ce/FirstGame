@@ -26,8 +26,7 @@ public class SelectBallActivity extends FullScreenActivity {
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SelectBallActivity.this.finish();
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                SelectBallActivity.this.onBackPressed();
             }
         });
 
@@ -54,6 +53,12 @@ public class SelectBallActivity extends FullScreenActivity {
         findViewById(selected_ball_Id).setBackgroundResource(R.color.light_gray_66a);
         Config.setBall_resId(resId);
         Config.setBall_id(selected_ball_Id);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
 }

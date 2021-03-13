@@ -11,6 +11,7 @@ import com.example.firstgame.attributes.RespawnTime;
 import com.example.firstgame.object_ingame.Threat;
 import com.example.firstgame.attributes.Score;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 public class GameController {
@@ -168,6 +169,7 @@ public class GameController {
         return (running==false);
     }
 
+    // init file save for game
     public final void setFilesaveValues(int flag) {
         if(flag == GameController.EMPTY_FILESAVE) {
             content = "";
@@ -184,7 +186,7 @@ public class GameController {
     }
 
 
-    public final void setValues(String content) throws NumberFormatException{
+    public final void setStatus(String content) throws NumberFormatException{
         String values[] = content.split("\n");
         this.ball.setStatus(values[1]);
         this.respawnTime.setCount(Integer.parseInt(values[2]));
@@ -199,6 +201,10 @@ public class GameController {
 
     public final String filesave() {
         return content;
+    }
+
+    public final void updateHighScore() {
+        this.score.updateHighScore();
     }
 
     public void clear() {

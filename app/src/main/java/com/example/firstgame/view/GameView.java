@@ -35,9 +35,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameOver gameOver;
 
     private String content = "";
-    private boolean _continue = false;
+    private boolean _continue = false, pauseInvisible = false;
     private static float ratio = 1;
-
+    private int flag;
     Bitmap[] bitmaps = new Bitmap[50];
 
     public GameView(Context context) {
@@ -46,9 +46,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
     }
 
-    public void addContent(String content) {
+    public void loadContent(String content, int flag) {
         this._continue = true;
         this.content = content;
+        this.flag = flag;
         Level.setLevel(Integer.parseInt(content.substring(0, content.indexOf("\n"))));
     }
 
@@ -67,7 +68,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 gameOver.draw(canvas);
                 gameController.getScore().draw(canvas);
             }
-            if(gameController.isPause()) pauseDrawable.draw(canvas);
+            if(gameController.isPause() & !pauseInvisible) pauseDrawable.draw(canvas);
         }
     }
 
@@ -86,6 +87,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         ratio = (float) Math.sqrt(ratio);
         ratio = Math.round(ratio*10)/10F;
     }
+
 
     private void initGame() {
         this.setRatio();
@@ -125,7 +127,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 new Vector<>(), score);
         if(_continue) {
             try {
-                gameController.setValues(content);
+                gameController.setStatus(content);
             } catch (Exception ex) {
                 getHandler().post(new Runnable() {
                     @Override
@@ -139,6 +141,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         pauseDrawable = new PauseDrawable(this.getWidth(), this.getHeight(), bitmaps);
         gameOver = new GameOver(this.getWidth(), this.getHeight(), bitmaps);
+
     }
 
     // get size for per object
@@ -170,6 +173,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             public void run() {
                 initGame();
                 gameController.runGame();
+                if(flag == GameController.PAUSE) GameView.this.pause(false);
 
                 GameView.this.setOnTouchListener((v, event) -> {
                     if (event.getAction() == MotionEvent.ACTION_DOWN)
@@ -195,7 +199,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                                         gameController.notifyOnce();
                                         break;
                                     case PauseDrawable.QUIT:
-                                        dispose_and_save();
+                                        disposeAndSave();
                                         break;
                                     case PauseDrawable.RESTART:
                                         gameController.restart();
@@ -206,7 +210,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                             else{
                                 switch (gameController.touchProcess(event)) {
                                     case GameController.PAUSE:
-                                        pause();
+                                        pause(false);
                                     case GameController.NOT_PAUSE:
                                 }
                             }
@@ -220,7 +224,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-
     }
 
     @Override
@@ -235,23 +238,33 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     //
     private void dispose() {
         this.gameController.setFilesaveValues(GameController.EMPTY_FILESAVE);
+        this.gameController.updateHighScore();
         this.gameController.clear();
         ((Activity) GameView.this.getContext()).finish();
     }
 
-    private void dispose_and_save() {
+    private void disposeAndSave() {
         this.gameController.setFilesaveValues(GameController.HAVE_FILESAVE);
+        this.gameController.updateHighScore();
         this.gameController.clear();
         ((Activity) GameView.this.getContext()).finish();
     }
 
     // return previous stt
-    public boolean pause() {
+    public boolean pause(boolean invisible) {
+        pauseInvisible = invisible;
+        if(invisible) {
+            this.gameController.setFilesaveValues(GameController.HAVE_FILESAVE);
+            return false;
+        }
+
         boolean stt = gameController.isPause();
         if(stt) {
             this.gameController.setFilesaveValues(GameController.HAVE_FILESAVE);
+            this.gameController.updateHighScore();
             this.gameController.clear();
         }
+
         gameController.gamePause();
         return stt;
     }

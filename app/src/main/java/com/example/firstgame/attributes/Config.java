@@ -5,6 +5,8 @@ public class Config {
     private static boolean vibra;
     private static int ball_resId;
     private static int ball_id;
+    private static int screen_width;
+    private static int screen_height;
 
     public static boolean getSound() {
         return sound;
@@ -53,4 +55,22 @@ public class Config {
     public static void setBall_id(int ball_id) {
         Config.ball_id = ball_id;
     }
+
+    public static int getScreenWidth() {
+        return screen_width;
+    }
+
+    public static void setScreenWidth(int screenWidth) {
+        Config.screen_width = screen_width;
+    }
+
+    public static int getScreenHeight() {
+        return screen_height;
+    }
+
+    public static void setScreenHeight(int screenHeight) {
+        Config.screen_height = screen_height;
+    }
+
+
 }

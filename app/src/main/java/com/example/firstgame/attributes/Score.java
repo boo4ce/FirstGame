@@ -3,9 +3,15 @@ package com.example.firstgame.attributes;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import androidx.annotation.experimental.Experimental;
+
 import com.example.firstgame.view.GameView;
 
 public class Score {
+    private static int low_highScore;
+    private static int normal_highScore;
+    private static int fast_highScore;
+
     private int score;
     private boolean lock;
 
@@ -68,6 +74,7 @@ public class Score {
     synchronized public void gainScore() {
         if(!lock) {
             this.score++;
+
             lock = true;
             if(this.score == key_point) {
                 num_digits++;
@@ -85,6 +92,21 @@ public class Score {
         }
     }
 
+    public void updateHighScore() {
+        switch (Level.getLevel()) {
+            case Level.SLOW:
+                if(this.score > Score.getLow_highScore()) Score.setLow_highScore(this.score);
+                break;
+            case Level.NORMAL:
+                if(this.score > Score.getNormal_highScore()) Score.setNormal_highScore(this.score);
+                break;
+            case Level.FAST:
+                if(this.score > Score.getFast_highScore()) Score.setFast_highScore(this.score);
+                break;
+            default:
+        }
+    }
+
     synchronized public void unlock(){
         lock = false;
     }
@@ -96,5 +118,29 @@ public class Score {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public static int getLow_highScore() {
+        return low_highScore;
+    }
+
+    public static void setLow_highScore(int low_highScore) {
+        Score.low_highScore = low_highScore;
+    }
+
+    public static int getNormal_highScore() {
+        return normal_highScore;
+    }
+
+    public static void setNormal_highScore(int normal_highScore) {
+        Score.normal_highScore = normal_highScore;
+    }
+
+    public static int getFast_highScore() {
+        return fast_highScore;
+    }
+
+    public static void setFast_highScore(int fast_highScore) {
+        Score.fast_highScore = fast_highScore;
     }
 }
