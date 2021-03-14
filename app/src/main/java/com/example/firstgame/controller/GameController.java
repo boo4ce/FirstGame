@@ -1,5 +1,7 @@
 package com.example.firstgame.controller;
 
+import android.content.Context;
+import android.os.Vibrator;
 import android.view.MotionEvent;
 
 import com.example.firstgame.attributes.Level;
@@ -11,7 +13,6 @@ import com.example.firstgame.attributes.RespawnTime;
 import com.example.firstgame.object_ingame.Threat;
 import com.example.firstgame.attributes.Score;
 
-import java.io.Serializable;
 import java.util.Vector;
 
 public class GameController {
@@ -42,6 +43,9 @@ public class GameController {
     //
     private String content = "";
 
+    //effect
+    private final Vibrator vibrator;
+
     public GameController(GameView gameView, RespawnTime respawnTime, Ball ball, Threat basicThreat,
                           Vector<Threat> threats, Score score) {
         this.gameView = gameView;
@@ -54,6 +58,7 @@ public class GameController {
         this.supportThread = new SupportThread(this, respawnTime);
         this.mainThread = new MainThread(this.gameView,  this, supportThread);
 
+        vibrator = (Vibrator) gameView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     public void runGame() {
@@ -216,5 +221,9 @@ public class GameController {
         this.mainThread.kill();
         this.supportThread.kill();
         System.gc();
+    }
+
+    public void vibrate() {
+        vibrator.vibrate(500);
     }
 }

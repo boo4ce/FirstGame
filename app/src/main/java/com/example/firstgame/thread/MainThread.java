@@ -3,10 +3,10 @@ package com.example.firstgame.thread;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-import com.example.firstgame.activity.MainActivity;
 import com.example.firstgame.controller.GameController;
 import com.example.firstgame.view.GameView;
 
+// draw canvas thread
 public class MainThread extends Thread {
     private final SurfaceHolder surfaceHolder;
     private final GameController gameController;

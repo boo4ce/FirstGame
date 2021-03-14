@@ -1,9 +1,12 @@
 package com.example.firstgame.thread;
 
+import com.example.firstgame.attributes.Config;
 import com.example.firstgame.attributes.Level;
 import com.example.firstgame.controller.GameController;
 import com.example.firstgame.attributes.RespawnTime;
 
+
+// check collision and init hold
 public class SupportThread extends Thread {
     private GameController gameController;
     private RespawnTime respawnTime;
@@ -19,6 +22,7 @@ public class SupportThread extends Thread {
         while(running) {
             if (gameController.checkCollision()) {
                 gameController.setGameOver();
+                if(Config.getVibra()) gameController.vibrate();
             }
             else {
                 this.respawnTime.increase();
