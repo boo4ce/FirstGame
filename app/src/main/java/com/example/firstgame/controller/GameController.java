@@ -224,6 +224,6 @@ public class GameController {
     }
 
     public void vibrate() {
-        vibrator.vibrate(500);
+        vibrator.vibrate(200);
     }
 }

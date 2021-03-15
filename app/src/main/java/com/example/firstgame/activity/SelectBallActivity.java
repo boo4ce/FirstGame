@@ -1,5 +1,6 @@
 package com.example.firstgame.activity;
 
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +23,9 @@ public class SelectBallActivity extends FullScreenActivity {
         selected_ball_Id = Config.getBall_id();
         previous_ball_Id = selected_ball_Id;
         findViewById(selected_ball_Id).setBackgroundResource(R.color.light_gray_66a);
-        
+
+        final MediaPlayer clickSound = MediaPlayer.create(this, R.raw.click);
+
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,6 +46,7 @@ public class SelectBallActivity extends FullScreenActivity {
                     previous_ball_Id = selected_ball_Id;
                     selected_ball_Id = list_id[j];
                     setSelectBall(list_resId[j]);
+                    if(Config.getSound()) clickSound.start();
                 }
             });
         }

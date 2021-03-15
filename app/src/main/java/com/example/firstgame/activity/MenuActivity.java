@@ -3,6 +3,7 @@ package com.example.firstgame.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,6 +63,8 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
         next_drawable = getDrawable(R.drawable.game_name_0);
 
+        final MediaPlayer clickSound = MediaPlayer.create(this, R.raw.click);
+
         //set animation
         new Thread(new Runnable() {
             @Override
@@ -85,6 +88,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                         MenuActivity.this.openActivity(SelectLevelActivity.class);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         kindOfButton = ButtonName.NOTHING;
+                        if(Config.getSound()) clickSound.start();
                     }
                     return true;
                 });
@@ -101,6 +105,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                         MenuActivity.this.openActivity(SelectBallActivity.class);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         kindOfButton = ButtonName.NOTHING;
+                        if(Config.getSound()) clickSound.start();
                     }
                     return true;
                 });
@@ -117,6 +122,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                         MenuActivity.this.openActivity(HighScoreActivity.class);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         kindOfButton = ButtonName.NOTHING;
+                        if(Config.getSound()) clickSound.start();
                     }
                     return true;
                 });
@@ -150,6 +156,7 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
                         startActivity(intent);
                         overridePendingTransition(R.anim.appear, R.anim.nothing);
                         kindOfButton = ButtonName.NOTHING;
+                        if(Config.getSound()) clickSound.start();
                     }
                     return true;
                 });
