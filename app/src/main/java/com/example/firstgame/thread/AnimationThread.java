@@ -5,7 +5,7 @@ import com.example.firstgame.activity.MenuActivity;
 public class AnimationThread extends Thread {
     private MenuActivity menuActivity;
     private boolean running = true;
-    private int current_frame = 0;
+    private int current_frame = 1;
 
     public AnimationThread(MenuActivity menuActivity) {
         this.menuActivity = menuActivity;
