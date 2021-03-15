@@ -12,6 +12,7 @@ import com.example.firstgame.R;
 import com.example.firstgame.attributes.Level;
 
 public class SelectLevelActivity extends FullScreenActivity {
+    private int current_button_pressing = -1;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -25,11 +26,16 @@ public class SelectLevelActivity extends FullScreenActivity {
         for(int i = 0; i < 3; i++) {
             final int j = i;
             findViewById(selected_level[i]).setOnTouchListener((v, event) -> {
+                if(current_button_pressing == -1)
+                    current_button_pressing = j;
+                if(current_button_pressing != j) return false;
+
                 setAnimClick(findViewById(selected_level[j]), event);
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     openNewActivity(level[j]);
 //                    setResult(RESULT_OK);
                     SelectLevelActivity.this.finish();
+                    current_button_pressing = -1;
                 }
                 return true;
             });

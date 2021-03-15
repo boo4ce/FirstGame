@@ -2,11 +2,13 @@ package com.example.firstgame.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,12 +30,19 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
     public final static int START_NEW_GAME = 19;
 
     private ImageView game_name;
+    private Drawable current_drawable, next_drawable;
     private AnimationThread animationThread;
     private int[] list;
     private Handler mHandler;
 
     private File file;
     private Button button;
+
+    // only one touch per time
+    private enum ButtonName {
+        CONTINUE, NEWGAME, BALL, HIGHSCORE, QUIT, NOTHING
+    }
+    private ButtonName kindOfButton = ButtonName.NOTHING;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint({"ResourceType", "ClickableViewAccessibility"})
@@ -43,13 +52,6 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
         this.setContentView(R.layout.menu_activity);
 
-        //get screen size
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        Config.setScreenWidth(displayMetrics.widthPixels);
-        Config.setScreenHeight(displayMetrics.heightPixels);
-
-
         game_name = findViewById(R.id.name);
         mHandler = new Handler(Looper.getMainLooper());
 
@@ -58,57 +60,96 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
 
         button = buttons[0];
 
+        next_drawable = getDrawable(R.drawable.game_name_0);
+
         //set animation
         new Thread(new Runnable() {
             @Override
             public void run() {
+                //get screen size
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                MenuActivity.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                Config.setScreenWidth(displayMetrics.widthPixels);
+                Config.setScreenHeight(displayMetrics.heightPixels);
+
                 //set touch listener new game
                 buttons[1].setOnTouchListener((v, event) -> {
+                    if(kindOfButton == ButtonName.NOTHING) {
+                        kindOfButton = ButtonName.NEWGAME;
+                    }
+                    if(kindOfButton != ButtonName.NEWGAME) return false;
+
                     setProcess(buttons[1], event);
                     if(event.getAction() == MotionEvent.ACTION_UP) {
 //                        startActivityForResult(intent, ENABLE_TO_CLOSE);
                         MenuActivity.this.openActivity(SelectLevelActivity.class);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        kindOfButton = ButtonName.NOTHING;
                     }
                     return true;
                 });
 
                 // ball
                 buttons[2].setOnTouchListener((v, event) -> {
+                    if(kindOfButton == ButtonName.NOTHING) {
+                        kindOfButton = ButtonName.BALL;
+                    }
+                    if(kindOfButton != ButtonName.BALL) return false;
+
                     setProcess(buttons[2], event);
                     if(event.getAction() == MotionEvent.ACTION_UP) {
                         MenuActivity.this.openActivity(SelectBallActivity.class);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        kindOfButton = ButtonName.NOTHING;
                     }
                     return true;
                 });
 
                 // highscore
                 buttons[3].setOnTouchListener((v, event) -> {
+                    if(kindOfButton == ButtonName.NOTHING) {
+                        kindOfButton = ButtonName.HIGHSCORE;
+                    }
+                    if(kindOfButton != ButtonName.HIGHSCORE) return false;
+
                     setProcess(buttons[3], event);
                     if(event.getAction() == MotionEvent.ACTION_UP) {
                         MenuActivity.this.openActivity(HighScoreActivity.class);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        kindOfButton = ButtonName.NOTHING;
                     }
                     return true;
                 });
 
                 // quit
                 buttons[4].setOnTouchListener((v, event) -> {
+                    if(kindOfButton == ButtonName.NOTHING) {
+                        kindOfButton = ButtonName.QUIT;
+                    }
+                    if(kindOfButton != ButtonName.QUIT) return false;
+
                     setProcess(buttons[4], event);
-                    if(event.getAction() == MotionEvent.ACTION_UP)
+                    if(event.getAction() == MotionEvent.ACTION_UP) {
                         MenuActivity.this.finishAndRemoveTask();
+                        kindOfButton = ButtonName.NOTHING;
+                    }
                     return true;
                 });
 
                 //continues
                 buttons[0].setOnTouchListener((v, event) -> {
+                    if(kindOfButton == ButtonName.NOTHING) {
+                        kindOfButton = ButtonName.CONTINUE;
+                    }
+                    if(kindOfButton != ButtonName.CONTINUE) return false;
+
                     setProcess(buttons[0], event);
                     if(event.getAction() == MotionEvent.ACTION_UP) {
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.putExtra("flag", MenuActivity.START_WITH_PREVIOUS_GAME);
                         startActivity(intent);
                         overridePendingTransition(R.anim.appear, R.anim.nothing);
+                        kindOfButton = ButtonName.NOTHING;
                     }
                     return true;
                 });
@@ -137,8 +178,10 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         }).start();
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void updateFrame(int frame_index) {
-        this.frame_index = frame_index;
+        current_drawable = next_drawable.getCurrent();
+        next_drawable = getDrawable(list[frame_index]);
         mHandler.post(this);
     }
 
@@ -212,12 +255,9 @@ public class MenuActivity extends FullScreenActivity implements Runnable{
         }
     }
 
-    // current frame of ball
-    private int frame_index;
-
     @Override
     public void run() {
-        game_name.setBackgroundResource(list[frame_index]);
+        game_name.setBackground(current_drawable);
     }
 
 //    @Override
