@@ -94,9 +94,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         System.out.println(ratio);
         int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
                 R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
-                R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.vn_ball, //8, 9, 10, 11
+                R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.yellow_ball, //8, 9, 10, 11
                 R.drawable.setting_icon, R.drawable.threat, R.drawable.setting_icon, R.drawable.vibration, //12, 13, 14, 15
-                R.drawable.speaker, R.drawable.mute, R.drawable.resume, R.drawable.restart,  // 16, 17, 18, 19
+                R.drawable.speakers, R.drawable.mutes, R.drawable.resume, R.drawable.restart,  // 16, 17, 18, 19
                 R.drawable.unvibration, R.drawable.quit}; //20, 21
         list[11] = Config.getBall_resId();
 
