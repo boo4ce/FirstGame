@@ -51,9 +51,9 @@ public class Score {
     }
 
     private void displayScore(Canvas canvas) {
-        int cur_score = new Integer(score);
+        int cur_score = score;
         int needed_digit = 0;
-        int last_posi1 = new Integer(last_posi);
+        int last_posi1 = last_posi;
 
         do {
             needed_digit = cur_score%10;

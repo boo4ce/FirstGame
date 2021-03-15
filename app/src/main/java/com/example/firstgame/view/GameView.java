@@ -91,7 +91,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private void initGame() {
         this.setRatio();
-
+        System.out.println(ratio);
         int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
                 R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
                 R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.vn_ball, //8, 9, 10, 11
@@ -120,7 +120,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Threat basicThreat = new Threat(GameView.this, ball, bitmaps[13], this.getWidth(),
                 ObjectSize.getHoldHeight());
         Score score = new Score(GameView.this, bitmaps[10],
-                subArray(bitmaps, 0, 9), 250, 300);
+                subArray(bitmaps, 0, 9), ObjectSize.getScoreWidth(),
+                ObjectSize.getScoreHeight());
 
         RespawnTime respawnTime = new RespawnTime(0);
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,

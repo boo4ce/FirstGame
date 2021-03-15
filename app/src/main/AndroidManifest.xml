@@ -19,21 +19,26 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:turnScreenOn="true" />
 
         <activity android:name=".activity.SelectLevelActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar.Fullscreen"/>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar.Fullscreen"
+            android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".activity.MenuActivity">
+            android:name=".activity.MenuActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.SelectBallActivity" />
-        <activity android:name=".activity.HighScoreActivity" />
+        <activity android:name=".activity.SelectBallActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.HighScoreActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
