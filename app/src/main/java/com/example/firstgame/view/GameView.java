@@ -91,7 +91,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private void initGame() {
         this.setRatio();
-        System.out.println(ratio);
+
         int[] list = {R.drawable.zero, R.drawable.one, R.drawable.two, R.drawable.three, //0, 1, 2, 3
                 R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, //4, 5, 6, 7
                 R.drawable.eight, R.drawable.nine, R.drawable.score, R.drawable.yellow_ball, //8, 9, 10, 11
@@ -126,6 +126,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         RespawnTime respawnTime = new RespawnTime(0);
         this.gameController = new GameController(GameView.this, respawnTime, ball, basicThreat,
                 new Vector<>(), score);
+
         if(_continue) {
             try {
                 gameController.setStatus(content);
@@ -229,7 +230,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-
+        gameController.clear();
     }
 
     public static int getRatio(int a) {
@@ -240,14 +241,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void dispose() {
         this.gameController.setFilesaveValues(GameController.EMPTY_FILESAVE);
         this.gameController.updateHighScore();
-        this.gameController.clear();
         ((Activity) GameView.this.getContext()).finish();
     }
 
     private void disposeAndSave() {
         this.gameController.setFilesaveValues(GameController.HAVE_FILESAVE);
         this.gameController.updateHighScore();
-        this.gameController.clear();
         ((Activity) GameView.this.getContext()).finish();
     }
 
@@ -263,7 +262,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(stt) {
             this.gameController.setFilesaveValues(GameController.HAVE_FILESAVE);
             this.gameController.updateHighScore();
-            this.gameController.clear();
         }
 
         gameController.gamePause();
@@ -274,4 +272,5 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(gameController == null) return "";
         return gameController.filesave();
     }
+
 }

@@ -1,9 +1,12 @@
 package com.example.firstgame.controller;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.view.MotionEvent;
 
+import com.example.firstgame.R;
+import com.example.firstgame.attributes.Config;
 import com.example.firstgame.attributes.Level;
 import com.example.firstgame.thread.SupportThread;
 import com.example.firstgame.view.GameView;
@@ -45,6 +48,7 @@ public class GameController {
 
     //effect
     private final Vibrator vibrator;
+    private final MediaPlayer soundEffect;
 
     public GameController(GameView gameView, RespawnTime respawnTime, Ball ball, Threat basicThreat,
                           Vector<Threat> threats, Score score) {
@@ -59,6 +63,7 @@ public class GameController {
         this.mainThread = new MainThread(this.gameView,  this, supportThread);
 
         vibrator = (Vibrator) gameView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        soundEffect = MediaPlayer.create(gameView.getContext(), R.raw.pass);
     }
 
     public void runGame() {
@@ -90,7 +95,10 @@ public class GameController {
             flag = threats.get(i).checkCollision_and_getScore();
             switch(flag) {
                 case Threat.COLLISION: return true;
-                case Threat.GET_SCORE: score.gainScore(); break;
+                case Threat.GET_SCORE:
+                    score.gainScore();
+                    if(Config.getSound()) soundEffect.start();
+                    break;
                 case Threat.IN_HOLD: score.unlock(); break;
                 case Threat.NO_COLLISION:
             }
