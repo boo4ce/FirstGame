@@ -47,12 +47,10 @@
         <ImageView
             android:layout_width="120dp"
             android:layout_height="75dp"
-            android:background="@drawable/low"
-            style="@style/text_view_only"
-            android:textSize="40sp"/>
+            android:background="@drawable/fast" />
 
         <TextView
-            android:id="@+id/score_low"
+            android:id="@+id/score_fast"
             style="@style/text_view_only"
             android:textSize="70sp"
             android:layout_width="wrap_content"
@@ -79,14 +77,12 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:layout_width="240dp"
+            android:layout_width="120dp"
             android:layout_height="60dp"
-            android:background="@drawable/normal"
-            style="@style/text_view_only"
-            android:textSize="40sp"/>
+            android:background="@drawable/low" />
 
         <TextView
-            android:id="@+id/score_normal"
+            android:id="@+id/score_low"
             style="@style/text_view_only"
             android:textSize="70sp"
             android:layout_width="wrap_content"
@@ -112,14 +108,12 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:layout_width="120dp"
+            android:layout_width="240dp"
             android:layout_height="60dp"
-            android:background="@drawable/fast"
-            style="@style/text_view_only"
-            android:textSize="40sp"/>
+            android:background="@drawable/normal" />
 
         <TextView
-            android:id="@+id/score_fast"
+            android:id="@+id/score_normal"
             style="@style/text_view_only"
             android:textSize="70sp"
             android:layout_width="wrap_content"

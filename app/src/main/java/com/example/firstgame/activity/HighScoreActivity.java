@@ -1,33 +1,69 @@
 package com.example.firstgame.activity;
 
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.firstgame.R;
-import com.example.firstgame.attributes.Config;
 import com.example.firstgame.attributes.Score;
 
-public class HighScoreActivity extends FullScreenActivity{
-    private float first_xCoordinate_of_touch = -1;
-    private boolean pullable = true;
-    private int current_drawable;
+public class HighScoreActivity extends FullScreenActivity {
+    private float first_xCoordinate_of_touch = -1, current_x;
+    private boolean pullable = true, firstTime = true, flag = true;
+    private LinearLayout[] list;
+    private Animation[] animations;
+
+    //left, right -> (0,1):0 (2,3):1 (4,5):2
+    private int x[];
+    private int left_view_state, center_view_state, right_view_state;
 
     @Override
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
-        this.setContentView(R.layout.high_score);
 
-        current_drawable = 0;
+        ConstraintLayout mainLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.high_score, null);
+        mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mainLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                list = new LinearLayout[]{findViewById(R.id.left_view), findViewById(R.id.center_view),
+                        findViewById(R.id.right_view)};
+
+                int translationX = list[1].getLeft();
+                int width = list[1].getWidth();
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                HighScoreActivity.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screen_width = displayMetrics.widthPixels;
+
+                x = new int[]{-translationX - width, -translationX, translationX, translationX + width,
+                        screen_width + translationX, screen_width + translationX + width};
+
+                list[0].setLeft(x[0]);
+                list[0].setRight(x[1]);
+                list[2].setLeft(x[4]);
+                list[2].setRight(x[5]);
+
+                left_view_state = 0; center_view_state = 1; right_view_state = 2;
+
+            }
+        });
+
+        this.setContentView(mainLayout);
+
+        animations = new Animation[3];
+        animations[0] = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.go_right);
+        animations[1] = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.go_left);
+        animations[2] = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.nothing);
 
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,7 +72,9 @@ public class HighScoreActivity extends FullScreenActivity{
             }
         });
 
-        ((TextView) findViewById(R.id.score)).setText(Score.getLow_highScore() + "");
+        ((TextView)findViewById(R.id.score_low)).setText(Score.getLow_highScore() + "");
+        ((TextView)findViewById(R.id.score_normal)).setText(Score.getNormal_highScore() + "");
+        ((TextView)findViewById(R.id.score_fast)).setText(Score.getFast_highScore() + "");
     }
 
     @Override
@@ -50,21 +88,17 @@ public class HighScoreActivity extends FullScreenActivity{
 
             case MotionEvent.ACTION_MOVE:
                 if(!pullable) break;
-
                 pullable = false;
-                if(isPullLeft(first_xCoordinate_of_touch, event.getX())) {
-                    current_drawable--;
-                    if(current_drawable == -1) current_drawable = 2;
-                } else if(isPullRight(first_xCoordinate_of_touch, event.getX())) {
-                    current_drawable++;
-                    if(current_drawable == 3) current_drawable = 0;
-                }
-                change();
+
+                current_x = event.getX();
+                animProcess();
+
                 break;
 
             case MotionEvent.ACTION_UP:
                 pullable = true;
                 break;
+
             default: break;
         }
 
@@ -81,27 +115,77 @@ public class HighScoreActivity extends FullScreenActivity{
         return x1 > x2;
     }
 
+    private void rotateLeft() {
+        if(firstTime) {
+            firstTime = false;
+            return;
+        }
+
+        left_view_state--; center_view_state--; right_view_state--;
+
+        if(left_view_state == -1) left_view_state = 2;
+        if(center_view_state == -1) center_view_state = 2;
+        if(right_view_state == -1) right_view_state = 2;
+
+        list[0].setLeft(x[left_view_state*2]);
+        list[0].setRight(x[left_view_state*2 + 1]);
+
+        list[1].setLeft(x[center_view_state*2]);
+        list[1].setRight(x[center_view_state*2 + 1]);
+
+        list[2].setLeft(x[right_view_state*2]);
+        list[2].setRight(x[right_view_state*2 + 1]);
+    }
+
+    private void rotateRight() {
+        if(firstTime) {
+            firstTime = false;
+            return;
+        }
+
+        left_view_state++; center_view_state++; right_view_state++;
+
+        if(left_view_state == 3) left_view_state = 0;
+        if(center_view_state == 3) center_view_state = 0;
+        if(right_view_state == 3) right_view_state = 0;
+
+        list[0].setLeft(x[left_view_state*2]);
+        list[0].setRight(x[left_view_state*2 + 1]);
+
+        list[1].setLeft(x[center_view_state*2]);
+        list[1].setRight(x[center_view_state*2 + 1]);
+
+        list[2].setLeft(x[right_view_state*2]);
+        list[2].setRight(x[right_view_state*2 + 1]);
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
-    private void change() {
-        switch (current_drawable) {
-            case 0:
-                ((TextView) findViewById(R.id.level)).setText("Low");
-                ((TextView) findViewById(R.id.score)).setText(Score.getLow_highScore() + "");
-                break;
-            case 1:
-                ((TextView) findViewById(R.id.level)).setText("Normal");
-                ((TextView) findViewById(R.id.score)).setText(Score.getNormal_highScore()  + "");
-                break;
-            case 2:
-                ((TextView) findViewById(R.id.level)).setText("Fast");
-                ((TextView) findViewById(R.id.score)).setText(Score.getFast_highScore()  + "");
-                break;
-            default:
+    private void animProcess() {
+        if(isPullLeft(first_xCoordinate_of_touch, current_x)) {
+            if(!flag) {
+                rotateLeft();
+            }
+            else rotateRight();
+
+            list[right_view_state].startAnimation(animations[0]);
+            list[center_view_state].startAnimation(animations[0]);
+            list[left_view_state].startAnimation(animations[0]);
+            flag = true;
+        } else if(isPullRight(first_xCoordinate_of_touch, current_x)) {
+            if(flag) {
+                rotateRight();
+            }
+            else rotateLeft();
+
+            list[left_view_state].startAnimation(animations[1]);
+            list[center_view_state].startAnimation(animations[1]);
+            list[right_view_state].startAnimation(animations[1]);
+            flag = false;
         }
     }
 }
