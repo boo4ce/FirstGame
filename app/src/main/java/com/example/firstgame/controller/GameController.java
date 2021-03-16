@@ -63,7 +63,7 @@ public class GameController {
         this.mainThread = new MainThread(this.gameView,  this, supportThread);
 
         vibrator = (Vibrator) gameView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
-        soundEffect = MediaPlayer.create(gameView.getContext(), R.raw.pass);
+        soundEffect = MediaPlayer.create(gameView.getContext(), R.raw.passing);
     }
 
     public void runGame() {

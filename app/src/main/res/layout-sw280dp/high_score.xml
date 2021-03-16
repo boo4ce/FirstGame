@@ -22,7 +22,6 @@
         android:text="High Score"
         android:gravity="center"
         style="@style/text_view_only"
-        android:background="@drawable/round_rect"
         android:textSize="37.5sp"
         android:layout_marginBottom="15dp"
 
@@ -39,6 +38,7 @@
         android:clickable="false"
         android:padding="22.5dp"
         android:background="@drawable/round_rect"
+
         app:layout_constraintVertical_bias="0.6"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
